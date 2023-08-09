@@ -40,13 +40,39 @@ class AppointmentService {
 
 	}
 
-	static async get(req){
+	static async get(req) {
 		try {
-			const appointmentid=req.body.id;
-			if (appointmentid===undefined) {
-				const getResult= await db.Appointments.findAll({
+			const appointmentid = req.body.id;
+			if (appointmentid === undefined) {
+				const getResult = await db.Appointments.findAll({
+					attributes: [
+						// eslint-disable-next-line max-len
+						[db.Sequelize.fn('concat', db.Sequelize.col('user.name'), ' ', db.Sequelize.col('user.surName')), 'user_full_name'],
+						// eslint-disable-next-line max-len
+						[db.Sequelize.fn('concat', db.Sequelize.col('appDoctor.name'), ' ', db.Sequelize.col('user.surName')), 'doctor_full_name'],
+						[db.Sequelize.col('Hospital.hospitalName'), 'hospital_name'],
+						'entryDate',
+						'releaseDate'
+					],
 					order: [
-						[ 'id', 'asc' ]
+						['id', 'asc']
+					],
+					include: [
+						{
+							as: 'user',
+							model: db.User,
+							attributes: []
+						},
+						{
+							as: 'appDoctor',
+							model: db.User,
+							attributes: []
+						},
+						{
+							model: db.Hospitals,
+							attributes: []
+						}
+
 					]
 				});
 				return {
@@ -55,7 +81,7 @@ class AppointmentService {
 				};
 			}
 			else {
-				const getResult=await db.Appointments.findOne({
+				const getResult = await db.Appointments.findOne({
 					where: {
 						id: appointmentid
 					}
@@ -74,14 +100,14 @@ class AppointmentService {
 		}
 	}
 
-	static async update(req){
+	static async update(req) {
 		try {
-			const updateResult=await db.Appointments.findOne({
+			const updateResult = await db.Appointments.findOne({
 				where: {
 					id: req.body.id
 				}
 			});
-			if (updateResult===null) {
+			if (updateResult === null) {
 				return {
 					type: false,
 					message: 'Appointment not found'
@@ -109,11 +135,11 @@ class AppointmentService {
 			};
 		}
 	}
-    
-	static async delete(req){
+
+	static async delete(req) {
 		try {
-			const id=req.body.id;
-			if (id===undefined) {
+			const id = req.body.id;
+			if (id === undefined) {
 				return {
 					type: false,
 					message: 'id cannot be null'
@@ -121,7 +147,7 @@ class AppointmentService {
 			}
 			else {
 				db.Appointments.destroy({
-					where: {id}
+					where: { id }
 				});
 				return {
 					type: true,

@@ -1,9 +1,17 @@
 import AuthorisationService from '../Service/AuthorisationService';
+import AuthorisationValidation from '../src/validations/AuthorisationValidation';
 
 class AuthorisationController {
 
 	static async create(req, res) {
 		try {
+			const validation = await AuthorisationValidation.createValidation(req.body);
+			if (!validation.type) {
+				return {
+					type: false,
+					message: validation.message
+				};
+			}
 			const result = await AuthorisationService.create(req);
 			if (!result.type) {
 				return res.json({
@@ -20,11 +28,29 @@ class AuthorisationController {
 			};
 		}
 	}
+	static async getAll(req, res) {
+		const result = await AuthorisationService.getAll(req);
+		if (!result.type) {
+			return res.json(result.message);
+		}
+		return res.json(result.data);
+	}
 	static async get(req, res) {
 		const result = await AuthorisationService.get(req);
-		return res.json(result);
+		if (!result.type) {
+			return res.json(result.message);
+		}
+		return res.json(result.data);
 	}
+
 	static async update(req, res) {
+		const validation = await AuthorisationValidation.createValidation(req.body);
+		if (!validation.type) {
+			return {
+				type: false,
+				message: validation.message
+			};
+		}
 		const result = await AuthorisationService.update(req);
 		if (!result.type) {
 			return res.json(result);

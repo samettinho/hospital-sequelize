@@ -30,14 +30,25 @@ class UserService {
 		}
 	}
 
+	static async getAll() {
+		const getResult = await db.User.findAll({
+			order: [
+				['id', 'asc']
+			]
+		});
+		return {
+			type: true,
+			data: getResult
+		};
+
+	}
 	static async get(req) {
 		try {
-			const userid = req.body.id;
+			const userid = req.params.id;
 			if (userid === undefined) {
-				const getResult = await db.User.findAll({});
 				return {
-					type: true,
-					data: getResult
+					type: false,
+					message: 'id cannot null'
 				};
 			}
 			else {
@@ -96,7 +107,7 @@ class UserService {
 	}
 	static async delete(req) {
 		try {
-			const id = req.body.id;
+			const id = req.params.id;
 			if (id === undefined) {
 				return {
 					type: false,

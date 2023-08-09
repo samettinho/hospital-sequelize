@@ -1,11 +1,12 @@
 import express from 'express';
 import AuthorisationController from '../Controller/AuthorisationController';
 
-const  app=express();
+const app = express();
 
-app.post('/authorisationAdd', AuthorisationController.create);
-app.post('/authorisations', AuthorisationController.get);
-app.put('/authorisationUpdate', AuthorisationController.update);
-app.delete('/authorisationDelete', AuthorisationController.delete);
+app.get('/authorisations/:id', AuthorisationController.get);
+app.delete('/authorisations/:id', AuthorisationController.delete);
+app.get('/authorisations', AuthorisationController.getAll);
+app.post('/authorisations', AuthorisationController.create);
+app.put('/authorisations', AuthorisationController.update);
 
-module.exports=app;
+module.exports = app;

@@ -29,26 +29,46 @@ class AuthorisationService {
 		}
 	}
 
+	static async getAll() {
+		const getResult = await db.Authorisation.findAll({
+			order: [
+				['id', 'asc']
+			]
+		});
+		return {
+			type: true,
+			data: getResult
+		};
+
+	}
 	static async get(req) {
-		const authorisationId = req.body.id;
-		if (authorisationId === undefined) {
-			const getResult = await db.Authorisation.findAll({
-				order: [
-					['id', 'asc']
-				]
-			});
-			return getResult;
+		try {
+			const authorisationId = req.params.id;
+			if (authorisationId === undefined) {
+				return {
+					type: false,
+					message: 'id cannot null'
+				};
+			}
+			else {
+				const getResult = await db.Authorisation.findOne({
+					where: {
+						id: authorisationId
+					}
+				});
+				return {
+					type: true,
+					data: getResult
+				};
+			}
 		}
-		else {
-			const getResult = await db.Authorisation.findOne({
-				where: {
-					id: authorisationId
-				}
-			});
-			return getResult;
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
 		}
 	}
-
 	static async update(req) {
 		try {
 			const updateResult = await db.Authorisation.findOne({
@@ -57,7 +77,7 @@ class AuthorisationService {
 				}
 			});
 			if (updateResult === null) {
-				console.log('if-->', updateResult);
+
 				return {
 					type: false,
 					message: 'authorisation not found'
@@ -68,7 +88,6 @@ class AuthorisationService {
 					authorisationStatement: req.body.authorisationStatement
 				});
 				await updateResult.save();
-				console.log('updateResult---->', updateResult);
 				return updateResult;
 			}
 		}
@@ -81,7 +100,7 @@ class AuthorisationService {
 	}
 
 	static async delete(req) {
-		const id = Number(req.body.id);
+		const id = Number(req.params.id);
 		db.Authorisation.destroy({
 			where: { id }
 		});

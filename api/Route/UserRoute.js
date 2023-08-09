@@ -1,11 +1,12 @@
-import express  from 'express';
+import express from 'express';
 import UserController from '../Controller/UserController';
 
-const app=express();
+const app = express();
 
-app.post('/users', UserController.get);
-app.post('/userAdd', UserController.create);
-app.put('/userUpdate', UserController.update);
-app.delete('/userDelete', UserController.delete);
+app.get('/users/:id', UserController.get);
+app.delete('/users/:id', UserController.delete);
+app.get('/users', UserController.getAll);
+app.post('/users', UserController.create);
+app.put('/users', UserController.update);
 
-module.exports=app;
+module.exports = app;

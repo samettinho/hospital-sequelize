@@ -29,18 +29,25 @@ class HospitalService {
 		}
 	}
 
+	static async getAll() {
+		const getResult = await db.Hospitals.findAll({
+			order: [
+				['id', 'asc']
+			]
+		});
+		return {
+			type: true,
+			data: getResult
+		};
+
+	}
 	static async get(req) {
 		try {
-			const hospitalId = req.body.id;
+			const hospitalId = req.params.id;
 			if (hospitalId === undefined) {
-				const getResult = await db.Hospitals.findAll({
-					order: [
-						['id', 'asc']
-					]
-				});
 				return {
-					type: true,
-					data: getResult
+					type: false,
+					message: 'id cannot null'
 				};
 			}
 			else {
@@ -97,7 +104,7 @@ class HospitalService {
 
 	static async delete(req) {
 		try {
-			const id = req.body.id;
+			const id = req.params.id;
 			if (id === undefined) {
 				return {
 					type: false,

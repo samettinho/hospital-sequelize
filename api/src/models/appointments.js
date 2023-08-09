@@ -11,9 +11,11 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			// define association here
+			Appointments.hasOne(models.User, { as: 'user', sourceKey: 'userId', foreignKey: 'id' });
+			Appointments.hasOne(models.User, { as: 'appDoctor', sourceKey: 'doctor', foreignKey: 'id' });
+			Appointments.hasOne(models.Hospitals, { sourceKey: 'hospitalId', foreignKey: 'id' });
 		}
-	
+
 	}
 	Appointments.init({
 		userId: DataTypes.INTEGER,

@@ -29,24 +29,44 @@ class RoleService {
 			};
 		}
 	}
+	static async getAll() {
+		const getResult = await db.Role.findAll({
+			order: [
+				['id', 'asc']
+			]
+		});
+		return {
+			type: true,
+			data: getResult
+		};
+
+	}
 	static async get(req) {
-		const roleid = req.body.id;
-		console.log(roleid);
-		if (roleid === undefined) {
-			const getResult = await db.Role.findAll({
-				order: [
-					['id', 'asc']
-				]
-			});
-			return getResult;
+		try {
+			const roleid = req.params.id;
+			if (roleid === undefined) {
+				return {
+					type: false,
+					message: 'id cannot null'
+				};
+			}
+			else {
+				const getResult = await db.Role.findOne({
+					where: {
+						id: roleid
+					}
+				});
+				return {
+					type: true,
+					data: getResult
+				};
+			}
 		}
-		else {
-			const getResult = await db.Role.findOne({
-				where: {
-					id: roleid
-				}
-			});
-			return getResult;
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
 		}
 	}
 	static async update(req) {
@@ -67,11 +87,14 @@ class RoleService {
 				rolName: req.body.rolName
 			});
 			await updateResult.save();
-			return updateResult;
+			return {
+				type: true,
+				message: 'role updated'
+			};
 		}
 	}
 	static async delete(req) {
-		const id = Number(req.body.id);
+		const id = Number(req.params.id);
 		db.Role.destroy({
 			where: { id }
 		});

@@ -1,11 +1,11 @@
 import express from 'express';
 import AppointmentController from '../Controller/AppointmentController';
 
-const app=express();
+const app = express();
 
-app.post('/appointmentCreate', AppointmentController.create);
-app.post('/appointments', AppointmentController.get);
-app.put('/appointmentUpdate', AppointmentController.update);
-app.delete('/appointmentDelete', AppointmentController.delete);
+app.post('/appointments', AppointmentController.create);
+app.get('/appointments', AppointmentController.get);
+app.put('/appointments', AppointmentController.update);
+app.delete('/appointments', AppointmentController.delete);
 
-module.exports=app;
+module.exports = app;
