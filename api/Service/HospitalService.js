@@ -1,23 +1,29 @@
 /* eslint-disable array-bracket-spacing */
 import db from '../src/models';
+import language from '../src/language';
 
 class HospitalService {
 
 	static async create(req) {
+
 		try {
-			const newHospital = await db.Hospitals.create({
-				hospitalName: req.body.hospitalName
+			const lang = req.headers.lang;
+
+			const [createdRecord, created] = await db.Hospitals.findOrCreate({
+				where: { hospitalName: req.body.hospitalName },
+				defaults: req.body
 			});
-			if (newHospital.hospitalName === null) {
+			if (created) {
 				return {
-					type: false,
-					message: 'hospital name cannot null'
+					type: true,
+					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.hospital),
+					data: createdRecord
 				};
 			}
 			else {
 				return {
-					type: true,
-					message: 'created'
+					type: false,
+					message: (language[lang].error.already_exists)
 				};
 			}
 		}
@@ -29,7 +35,8 @@ class HospitalService {
 		}
 	}
 
-	static async getAll() {
+	static async getAll(req) {
+		const lang = req.headers.lang;
 		const getResult = await db.Hospitals.findAll({
 			order: [
 				['id', 'asc']
@@ -37,17 +44,19 @@ class HospitalService {
 		});
 		return {
 			type: true,
+			message: language[lang].crud.succes,
 			data: getResult
 		};
 
 	}
 	static async get(req) {
 		try {
+			const lang = req.headers.lang;
 			const hospitalId = req.params.id;
 			if (hospitalId === undefined) {
 				return {
 					type: false,
-					message: 'id cannot null'
+					message: (language[lang].error.connot_null).replace('{}', 'id')
 				};
 			}
 			else {
@@ -56,8 +65,15 @@ class HospitalService {
 						id: hospitalId
 					}
 				});
+				if (getResult === null) {
+					return {
+						type: false,
+						message: (language[lang].error.not_found).replace('{}', language[lang].tables.hospital)
+					};
+				}
 				return {
 					type: true,
+					message: language[lang].crud.succes,
 					data: getResult
 				};
 			}
@@ -72,6 +88,7 @@ class HospitalService {
 
 	static async update(req) {
 		try {
+			const lang = req.headers.lang;
 			const updateResult = await db.Hospitals.findOne({
 				where: {
 					id: req.body.id
@@ -80,7 +97,7 @@ class HospitalService {
 			if (updateResult === null) {
 				return {
 					type: false,
-					message: 'hospital not found'
+					message: (language[lang].error.not_found).replace('{}', language[lang].tables.role)
 				};
 			}
 			else {
@@ -90,7 +107,8 @@ class HospitalService {
 				await updateResult.save();
 				return {
 					type: true,
-					message: 'hospital name updated'
+					message: (language[lang].crud.updated).replace('{#table}', language[lang].tables.hospital),
+					data: updateResult
 				};
 			}
 		}
@@ -104,22 +122,27 @@ class HospitalService {
 
 	static async delete(req) {
 		try {
+			const lang = req.headers.lang;
 			const id = req.params.id;
-			if (id === undefined) {
+			const deleteResult = await db.Hospitals.findOne({
+				where: {
+					id: id
+				}
+			});
+			if (deleteResult === null) {
 				return {
 					type: false,
-					message: 'id cannot be null'
+					message: (language[lang].error.not_found).replace('{}', 'id')
 				};
 			}
-			else {
-				db.Hospitals.destroy({
-					where: { id }
-				});
-				return {
-					type: true,
-					message: 'role is deleted'
-				};
-			}
+			db.Hospitals.destroy({
+				where: { id }
+			});
+			return {
+				type: true,
+				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.hospital)
+			};
+
 		}
 		catch (error) {
 			return {

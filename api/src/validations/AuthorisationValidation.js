@@ -5,9 +5,9 @@ class AuthorisationValidation {
   static async createValidation(body) {
     const schema = Joi.object({
       id: Joi.number(),
-      authorisation: Joi.string()
+      authorisationStatement: Joi.string().required()
     });
-    const result = schema.validation(body);
+    const result = schema.validate(body);
     if (result.error) {
       return {
         type: false,

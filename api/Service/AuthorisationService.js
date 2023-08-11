@@ -1,23 +1,29 @@
 /* eslint-disable array-bracket-spacing */
 import db from '../src/models';
+import language from '../src/language';
 
 class AuthorisationService {
 
 	static async create(req) {
+
 		try {
-			const newAuthorisation = await db.Authorisation.create({
-				authorisationStatement: req.body.authorisationStatement
+			const lang = req.headers.lang;
+
+			const [createdRecord, created] = await db.Authorisation.findOrCreate({
+				where: { authorisationStatement: req.body.authorisationStatement },
+				defaults: req.body
 			});
-			if (newAuthorisation.authorisationStatement === null) {
+			if (created) {
 				return {
-					type: false,
-					message: 'Authorisation cannot null'
+					type: true,
+					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.authorisation),
+					data: createdRecord
 				};
 			}
 			else {
 				return {
-					type: true,
-					data: newAuthorisation
+					type: false,
+					message: (language[lang].error.already_exists)
 				};
 			}
 		}
@@ -29,7 +35,8 @@ class AuthorisationService {
 		}
 	}
 
-	static async getAll() {
+	static async getAll(req) {
+		const lang = req.headers.lang;
 		const getResult = await db.Authorisation.findAll({
 			order: [
 				['id', 'asc']
@@ -37,17 +44,19 @@ class AuthorisationService {
 		});
 		return {
 			type: true,
+			message: language[lang].crud.succes,
 			data: getResult
 		};
 
 	}
 	static async get(req) {
 		try {
+			const lang = req.headers.lang;
 			const authorisationId = req.params.id;
 			if (authorisationId === undefined) {
 				return {
 					type: false,
-					message: 'id cannot null'
+					message: (language[lang].error.connot_null).replace('{}', 'id')
 				};
 			}
 			else {
@@ -56,8 +65,15 @@ class AuthorisationService {
 						id: authorisationId
 					}
 				});
+				if (getResult === null) {
+					return {
+						type: false,
+						message: (language[lang].error.not_found).replace('{}', language[lang].tables.authorisation)
+					};
+				}
 				return {
 					type: true,
+					message: language[lang].crud.succes,
 					data: getResult
 				};
 			}
@@ -71,16 +87,16 @@ class AuthorisationService {
 	}
 	static async update(req) {
 		try {
+			const lang = req.headers.lang;
 			const updateResult = await db.Authorisation.findOne({
 				where: {
 					id: req.body.id
 				}
 			});
 			if (updateResult === null) {
-
 				return {
 					type: false,
-					message: 'authorisation not found'
+					message: (language[lang].error.not_found).replace('{}', language[lang].tables.authorisation)
 				};
 			}
 			else {
@@ -88,7 +104,11 @@ class AuthorisationService {
 					authorisationStatement: req.body.authorisationStatement
 				});
 				await updateResult.save();
-				return updateResult;
+				return {
+					type: true,
+					message: (language[lang].crud.updated).replace('{#table}', language[lang].tables.authorisation),
+					data: updateResult
+				};
 			}
 		}
 		catch (error) {
@@ -100,13 +120,36 @@ class AuthorisationService {
 	}
 
 	static async delete(req) {
-		const id = Number(req.params.id);
-		db.Authorisation.destroy({
-			where: { id }
-		});
-		return {
-			message: 'authorisation is deleted'
-		};
+		try {
+			const lang = req.headers.lang;
+			const id = req.params.id;
+			const deleteResult = await db.Authorisation.findOne({
+				where: {
+					id: id
+				}
+			});
+			if (deleteResult === null) {
+				return {
+					type: false,
+					message: (language[lang].error.not_found).replace('{}', 'id')
+				};
+			}
+
+			db.Authorisation.destroy({
+				where: { id }
+			});
+			return {
+				type: true,
+				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.authorisation)
+			};
+
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
 	}
 
 }

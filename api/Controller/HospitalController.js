@@ -7,10 +7,10 @@ class HospitalController {
 		try {
 			const validation = await HospitalValidation.createValidation(req.body);
 			if (!validation.type) {
-				return {
+				return res.json({
 					type: false,
 					message: validation.message
-				};
+				});
 			}
 			const result = await HospitalService.create(req);
 			if (!result.type) {
@@ -19,7 +19,11 @@ class HospitalController {
 					message: result.message
 				});
 			}
-			return res.json(result);
+			return res.json({
+				type: true,
+				message: result.message,
+				data: result.data
+			});
 		}
 		catch (error) {
 			return res.json({
@@ -31,39 +35,66 @@ class HospitalController {
 	static async getAll(req, res) {
 		const result = await HospitalService.getAll(req);
 		if (!result.type) {
-			return res.json(result.message);
+			return res.json({
+				type: result.type,
+				message: result.message
+			});
 		}
-		return res.json(result.data);
+		return res.json({
+			type: result.type,
+			message: result.message,
+			data: result.data
+		});
 	}
 	static async get(req, res) {
 		const result = await HospitalService.get(req);
 		if (!result.type) {
-			return res.json(result.message);
+			return res.json({
+				type: result.type,
+				message: result.message
+			});
 		}
-		return res.json(result.data);
+		return res.json({
+			type: result.type,
+			message: result.message,
+			data: result.data
+		});
 	}
 
 	static async update(req, res) {
 		const validation = await HospitalValidation.createValidation(req.body);
 		if (!validation.type) {
-			return {
+			return res.json({
 				type: false,
 				message: validation.message
-			};
+			});
 		}
 		const result = await HospitalService.update(req);
 		if (!result.type) {
-			return res.json(result.message);
+			return res.json({
+				type: result.type,
+				message: result.message
+			});
 		}
-		return res.json(result);
+		return res.json({
+			type: result.type,
+			message: result.message,
+			data: result.data
+		});
 	}
 
 	static async delete(req, res) {
 		const result = await HospitalService.delete(req);
 		if (!result.type) {
-			return res.json(result.message);
+			return res.json({
+				type: result.type,
+				message: result.message
+			});
 		}
-		return res.json(result);
+		return res.json({
+			type: result.type,
+			message: result.message
+		});
 	}
 
 }

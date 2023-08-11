@@ -10,7 +10,7 @@ class AppointmentValidation {
       entryDate: Joi.date(),
       releaseDate: Joi.date()
     });
-    const result = schema.validation(body);
+    const result = schema.validate(body);
     if (result.error) {
       return {
         type: false,

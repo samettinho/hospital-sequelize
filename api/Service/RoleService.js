@@ -1,10 +1,12 @@
 /* eslint-disable array-bracket-spacing */
 import db from '../src/models';
+import language from '../src/language';
 
 class RoleService {
 
 	static async create(req) {
 		try {
+			const lang = req.headers.lang;
 			const [createdRecord, created] = await db.Role.findOrCreate({
 				where: { rolName: req.body.rolName },
 				defaults: req.body
@@ -12,13 +14,14 @@ class RoleService {
 			if (created) {
 				return {
 					type: true,
+					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.role),
 					data: createdRecord
 				};
 			}
 			else {
 				return {
 					type: false,
-					message: 'Role not added.'
+					message: (language[lang].error.already_exists)
 				};
 			}
 		}
@@ -29,7 +32,8 @@ class RoleService {
 			};
 		}
 	}
-	static async getAll() {
+	static async getAll(req) {
+		const lang = req.headers.lang;
 		const getResult = await db.Role.findAll({
 			order: [
 				['id', 'asc']
@@ -37,17 +41,19 @@ class RoleService {
 		});
 		return {
 			type: true,
+			message: language[lang].crud.succes,
 			data: getResult
 		};
 
 	}
 	static async get(req) {
+		const lang = req.headers.lang;
 		try {
 			const roleid = req.params.id;
 			if (roleid === undefined) {
 				return {
 					type: false,
-					message: 'id cannot null'
+					message: (language[lang].error.connot_null).replace('{}', 'id')
 				};
 			}
 			else {
@@ -56,8 +62,15 @@ class RoleService {
 						id: roleid
 					}
 				});
+				if (getResult === null) {
+					return {
+						type: false,
+						message: (language[lang].error.not_found).replace('{}', language[lang].tables.role)
+					};
+				}
 				return {
 					type: true,
+					message: language[lang].crud.succes,
 					data: getResult
 				};
 			}
@@ -70,37 +83,71 @@ class RoleService {
 		}
 	}
 	static async update(req) {
-		const updateResult = await db.Role.findOne({
-			where: {
-				id: req.body.id
+		try {
+			const lang = req.headers.lang;
+			const updateResult = await db.Role.findOne({
+				where: {
+					id: req.body.id
+				}
+			});
+			if (updateResult === null) {
+				return {
+					type: false,
+					message: (language[lang].error.not_found).replace('{}', language[lang].tables.role)
+				};
 			}
-		});
-		if (updateResult === null) {
+			else {
+				updateResult.set({
+					id: req.body.id,
+					rolName: req.body.rolName
+				});
+				await updateResult.save();
+				return {
+					type: true,
+					message: (language[lang].crud.updated).replace('{#table}', language[lang].tables.role),
+					data: updateResult
+				};
+			}
+		}
+		catch (error) {
 			return {
 				type: false,
-				message: 'role not found'
+				message: error.message
 			};
 		}
-		else {
-			updateResult.set({
-				id: req.body.id,
-				rolName: req.body.rolName
-			});
-			await updateResult.save();
-			return {
-				type: true,
-				message: 'role updated'
-			};
-		}
+
 	}
 	static async delete(req) {
-		const id = Number(req.params.id);
-		db.Role.destroy({
-			where: { id }
-		});
-		return {
-			message: 'role is deleted'
-		};
+		try {
+			const lang = req.headers.lang;
+			const id = req.params.id;
+			const deleteResult = await db.Role.findOne({
+				where: {
+					id: id
+				}
+			});
+
+			if (deleteResult === null) {
+				return {
+					type: false,
+					message: (language[lang].error.not_found).replace('{}', 'id')
+				};
+			}
+			db.Role.destroy({
+				where: { id }
+			});
+			return {
+				type: true,
+				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.role)
+			};
+
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
 	}
 
 }

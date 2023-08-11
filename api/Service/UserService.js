@@ -1,10 +1,15 @@
 /* eslint-disable array-bracket-spacing */
+
 import db from '../src/models';
+import language from '../src/language';
 
 class UserService {
 
 	static async create(req) {
+
 		try {
+			const lang = req.headers.lang;
+
 			const [createdRecord, created] = await db.User.findOrCreate({
 				where: { tc: req.body.tc },
 				defaults: req.body
@@ -12,13 +17,14 @@ class UserService {
 			if (created) {
 				return {
 					type: true,
+					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.user),
 					data: createdRecord
 				};
 			}
 			else {
 				return {
 					type: false,
-					message: 'Record not added. A record with the same unique key already exists.'
+					message: (language[lang].error.already_exists)
 				};
 			}
 		}
@@ -30,25 +36,38 @@ class UserService {
 		}
 	}
 
-	static async getAll() {
-		const getResult = await db.User.findAll({
-			order: [
-				['id', 'asc']
-			]
-		});
-		return {
-			type: true,
-			data: getResult
-		};
+	static async getAll(req) {
+		try {
+			const lang = req.headers.lang;
+			const userType = req.query.type;
+
+			const getResult = await db.User.findAll({
+				order: [
+					['id', 'asc']
+				]
+			});
+			return {
+				type: true,
+				message: language[lang].crud.succes,
+				data: getResult
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
 
 	}
 	static async get(req) {
 		try {
+			const lang = req.headers.lang;
 			const userid = req.params.id;
 			if (userid === undefined) {
 				return {
 					type: false,
-					message: 'id cannot null'
+					message: (language[lang].error.cannot_null).replace('{}', 'id')
 				};
 			}
 			else {
@@ -57,8 +76,15 @@ class UserService {
 						id: userid
 					}
 				});
+				if (getResult === null) {
+					return {
+						type: false,
+						message: (language[lang].error.not_found).replace('{}', language[lang].tables.user)
+					};
+				}
 				return {
 					type: true,
+					message: language[lang].crud.succes,
 					data: getResult
 				};
 			}
@@ -72,6 +98,7 @@ class UserService {
 	}
 	static async update(req) {
 		try {
+			const lang = req.headers.lang;
 			const updateResult = await db.User.findOne({
 				where: {
 					id: req.body.id
@@ -80,7 +107,7 @@ class UserService {
 			if (updateResult === null) {
 				return {
 					type: false,
-					message: 'user not found'
+					message: (language[lang].error.not_found).replace('{}', language[lang].tables.user)
 				};
 			}
 			else {
@@ -94,7 +121,8 @@ class UserService {
 				await updateResult.save();
 				return {
 					type: true,
-					message: 'user updated'
+					message: (language[lang].crud.updated).replace('{#table}', language[lang].tables.user),
+					data: updateResult
 				};
 			}
 		}
@@ -107,22 +135,28 @@ class UserService {
 	}
 	static async delete(req) {
 		try {
+
+			const lang = req.headers.lang;
 			const id = req.params.id;
-			if (id === undefined) {
+			const deleteResult = await db.User.findOne({
+				where: {
+					id: id
+				}
+			});
+			if (deleteResult === null) {
 				return {
 					type: false,
-					message: 'id cannot be null'
+					message: (language[lang].error.not_found).replace('{}', 'id')
 				};
 			}
-			else {
-				db.User.destroy({
-					where: { id }
-				});
-				return {
-					type: true,
-					message: 'user is deleted'
-				};
-			}
+			db.User.destroy({
+				where: { id }
+			});
+			return {
+				type: true,
+				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.user)
+			};
+
 		}
 		catch (error) {
 			return {

@@ -20,7 +20,11 @@ class UserController {
 					message: result.message
 				});
 			}
-			return res.json(result);
+			return res.json({
+				type: true,
+				message: result.message,
+				data: result.data
+			});
 		}
 		catch (error) {
 			return res.json({
@@ -32,16 +36,30 @@ class UserController {
 	static async getAll(req, res) {
 		const result = await UserService.getAll(req);
 		if (!result.type) {
-			return res.json(result.message);
+			return res.json({
+				type: result.type,
+				message: result.message
+			});
 		}
-		return res.json(result.data);
+		return res.json({
+			type: result.type,
+			message: result.message,
+			data: result.data
+		});
 	}
 	static async get(req, res) {
 		const result = await UserService.get(req);
 		if (!result.type) {
-			return res.json(result.message);
+			return res.json({
+				type: result.type,
+				message: result.message
+			});
 		}
-		return res.json(result.data);
+		return res.json({
+			type: result.type,
+			message: result.message,
+			data: result.data
+		});
 	}
 
 	static async update(req, res) {
@@ -54,17 +72,30 @@ class UserController {
 		}
 		const result = await UserService.update(req);
 		if (!result.type) {
-			return res.json(result.message);
+			return res.json({
+				type: result.type,
+				message: result.message
+			});
 		}
-		return res.json(result);
+		return res.json({
+			type: true,
+			message: result.message,
+			data: result.data
+		});
 	}
 
 	static async delete(req, res) {
 		const result = await UserService.delete(req);
 		if (!result.type) {
-			return res.json(result.message);
+			return res.json({
+				type: result.type,
+				message: result.message
+			});
 		}
-		return res.json(result);
+		return res.json({
+			type: result.type,
+			message: result.message
+		});
 	}
 
 }
