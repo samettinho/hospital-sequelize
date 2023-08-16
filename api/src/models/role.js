@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: 'roleId'
 			});
 		}
-	
+
 	}
 	Role.init({
 		rolName: DataTypes.STRING

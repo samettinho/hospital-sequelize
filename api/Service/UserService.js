@@ -35,15 +35,71 @@ class UserService {
 			};
 		}
 	}
+	static async getDoctor(req) {
+		try {
+			const lang = req.headers.lang;
+			const getResult = await db.User.findAll({
 
+				attributes: [
+					'id',
+					'name',
+					'surName',
+					[db.Sequelize.col('Roles.rolName'), 'role_name'],
+					[db.Sequelize.col('Hospitals.hospitalName'), 'hospital_name']
+				],
+				order: [
+					['id', 'asc']
+				],
+				include: [{
+					model: db.Role,
+					attributes: [],
+					where: [
+						{
+							rolName: 'doktor'
+						}
+					]
+				},
+				{
+					model: db.Hospitals,
+					attributes: []
+				}
+				]
+			});
+
+			return {
+				type: true,
+				message: language[lang].crud.succes,
+				data: getResult
+			};
+		}
+		catch (error) {
+			return {
+				type: false,
+				message: error.message
+			};
+		}
+
+	}
 	static async getAll(req) {
 		try {
 			const lang = req.headers.lang;
-			const userType = req.query.type;
-
 			const getResult = await db.User.findAll({
+				attributes: [
+					'id',
+					'name',
+					'surName',
+					'phone',
+					'email',
+					[db.Sequelize.col('Roles.rolName'), 'role_name']
+				],
 				order: [
 					['id', 'asc']
+				],
+				include: [
+					{
+						model: db.Role,
+						attributes: []
+					}
 				]
 			});
 			return {
@@ -149,7 +205,18 @@ class UserService {
 					message: (language[lang].error.not_found).replace('{}', 'id')
 				};
 			}
-			db.User.destroy({
+			const userAppointment = await db.Appointments.findAll({
+				where: {
+					userId: id
+				}
+			});
+			if (userAppointment.length > 0) {
+				return {
+					type: false,
+					message: language[lang].error.userDelete
+				};
+			}
+			await db.User.destroy({
 				where: { id }
 			});
 			return {

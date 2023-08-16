@@ -40,6 +40,17 @@ class HospitalService {
 		const getResult = await db.Hospitals.findAll({
 			order: [
 				['id', 'asc']
+			],
+			include: [
+				{
+					as: 'doctors',
+					model: db.User,
+					attributes: [
+						'id',
+						'name',
+						'surName'
+					]
+				}
 			]
 		});
 		return {

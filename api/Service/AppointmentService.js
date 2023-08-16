@@ -2,26 +2,111 @@
 
 import db from '../src/models';
 import language from '../src/language';
+import moment from 'moment/moment';
+import 'moment/locale/tr';
+import { Op } from 'sequelize';
 
 class AppointmentService {
 
 	static async create(req) {
 		try {
 			const lang = req.headers.lang;
-			const entryDate = req.body.entryDate;
-			const releaseDate = req.body.releaseDate;
-			const [createdRecord, created] = await db.Appointments.findOrCreate({
-				where: {
-					entryDate: entryDate,
-					releaseDate: releaseDate
+			const doctor = req.body.doctor;
+			const hospitalId = req.body.hospitalId;
+			const entryDate = moment(req.body.entryDate);
+			const eDate = entryDate.format('YYYY-MM-DD HH:mm:ss');
+			const releaseDate = entryDate.add(15, 'm').format('YYYY-MM-DD HH:mm:ss');
+
+			const doctorResult = await db.User.findAll({
+				where: [
+					{
+						id: doctor
+					}
+				],
+				include: [{
+					model: db.Role,
+					attributes: [],
+					where: [
+						{
+							rolName: 'doktor'
+						}
+					]
+				}
+				]
+			});
+			if (doctorResult.length <= 0) {
+				return {
+					type: false,
+					message: (language[lang].error.not_found).replace('{}', 'doktor')
+				};
+			}
+			const doctorHospital = await db.User.findAll({
+				where: [
+					{
+						id: doctor
+					}
+				],
+				order: [
+					['id', 'asc']
+				],
+				include: [{
+					model: db.Role,
+					attributes: [],
+					where: [
+						{
+							rolName: 'doktor'
+						}
+					]
 				},
-				defaults: req.body
+				{
+					model: db.Hospitals,
+					attributes: [],
+					where: {
+						id: hospitalId
+					}
+				}
+				]
+			});
+			if (doctorHospital.length <= 0) {
+				return {
+					type: false,
+					message: language[lang].error.doctor_hospital
+				};
+			}
+			const dateResult = await db.Appointments.findAll({
+
+				where: {
+					userId: req.body.userId,
+					doctor: req.body.doctor,
+					[Op.or]: [
+						{ entryDate: { [Op.between]: [eDate, releaseDate] } },
+						{ releaseDate: { [Op.between]: [eDate, releaseDate] } }
+					]
+				}
+			});
+			if (dateResult.length > 0) {
+				return {
+					type: false,
+					message: language[lang].error.appointment_not_created
+				};
+			}
+			const [, created] = await db.Appointments.findOrCreate({
+				where: {
+					entryDate: req.body.entryDate,
+					doctor: doctor
+				},
+				defaults: {
+					userId: req.body.userId,
+					doctor: req.body.doctor,
+					hospitalId: req.body.hospitalId,
+					entryDate: eDate,
+					releaseDate: releaseDate
+				}
 			});
 			if (created) {
 				return {
 					type: true,
-					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.appointment),
-					data: createdRecord
+					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.appointment)
 				};
 			}
 			else {
@@ -44,10 +129,11 @@ class AppointmentService {
 		const lang = req.headers.lang;
 		const getResult = await db.Appointments.findAll({
 			attributes: [
+				'id',
 				// eslint-disable-next-line max-len
 				[db.Sequelize.fn('concat', db.Sequelize.col('user.name'), ' ', db.Sequelize.col('user.surName')), 'user_full_name'],
 				// eslint-disable-next-line max-len
-				[db.Sequelize.fn('concat', db.Sequelize.col('appDoctor.name'), ' ', db.Sequelize.col('user.surName')), 'doctor_full_name'],
+				[db.Sequelize.fn('concat', db.Sequelize.col('appDoctor.name'), ' ', db.Sequelize.col('appDoctor.surName')), 'doctor_full_name'],
 				[db.Sequelize.col('Hospital.hospitalName'), 'hospital_name'],
 				'entryDate',
 				'releaseDate'
@@ -82,23 +168,53 @@ class AppointmentService {
 	static async get(req) {
 		try {
 			const lang = req.headers.lang;
-			const appointmentid = req.body.id;
+			const appointmentid = req.params.id;
 			if (appointmentid === undefined) {
 				return {
 					type: false,
-					message: (language[lang].error.connot_null).replace('{}', 'id')
+					message: (language[lang].error.cannot_null).replace('{}', 'id')
 				};
 			}
 			else {
 				const getResult = await db.Appointments.findOne({
 					where: {
 						id: appointmentid
-					}
+					},
+					attributes: [
+						'id',
+						// eslint-disable-next-line max-len
+						[db.Sequelize.fn('concat', db.Sequelize.col('user.name'), ' ', db.Sequelize.col('user.surName')), 'user_full_name'],
+						// eslint-disable-next-line max-len
+						[db.Sequelize.fn('concat', db.Sequelize.col('appDoctor.name'), ' ', db.Sequelize.col('appDoctor.surName')), 'doctor_full_name'],
+						[db.Sequelize.col('Hospital.hospitalName'), 'hospital_name'],
+						'entryDate',
+						'releaseDate'
+					],
+					order: [
+						['id', 'asc']
+					],
+					include: [
+						{
+							as: 'user',
+							model: db.User,
+							attributes: []
+						},
+						{
+							as: 'appDoctor',
+							model: db.User,
+							attributes: []
+						},
+						{
+							model: db.Hospitals,
+							attributes: []
+						}
+					]
 				});
 				if (getResult === null) {
 					return {
 						type: false,
-						message: (language[lang].error.not_found).replace('{}', language[lang].tables.appointment)
+						// eslint-disable-next-line max-len
+						message: (language[lang].error.not_found).replace('{#tables}', language[lang].tables.appointment)
 					};
 				}
 				return {
@@ -118,12 +234,108 @@ class AppointmentService {
 
 	static async update(req) {
 		try {
+			const entryDate = moment(req.body.entryDate);
+			const eDate = entryDate.format('YYYY-MM-DD HH:mm:ss');
+			const releaseDate = entryDate.add(15, 'm').format('YYYY-MM-DD HH:mm:ss');
+			console.log('releaseDate--->', releaseDate);
 			const lang = req.headers.lang;
 			const updateResult = await db.Appointments.findOne({
 				where: {
 					id: req.body.id
 				}
 			});
+			console.log(4554);
+			const appointments = await db.Appointments.findAll({
+				where: {
+					doctor: req.body.doctor,
+					entryDate: req.body.entryDate
+				}
+			});
+			console.log(1);
+			if (appointments.length > 0) {
+				return {
+					type: false,
+					message: language[lang].error.appointment_notC
+				};
+			}
+			const doctor = req.body.doctor;
+			const hospitalId = req.body.hospitalId;
+
+			const doctorResult = await db.User.findAll({
+				where: [
+					{
+						id: doctor
+					}
+				],
+				include: [{
+					model: db.Role,
+					attributes: [],
+					where: [
+						{
+							rolName: 'doktor'
+						}
+					]
+				}
+				]
+			});
+			console.log(2);
+			if (doctorResult.length <= 0) {
+				return {
+					type: false,
+					message: (language[lang].error.not_found).replace('{}', 'doktor')
+				};
+			}
+			const doctorHospital = await db.User.findAll({
+				where: [
+					{
+						id: doctor
+					}
+				],
+				order: [
+					['id', 'asc']
+				],
+				include: [{
+					model: db.Role,
+					attributes: [],
+					where: [
+						{
+							rolName: 'doktor'
+						}
+					]
+				},
+				{
+					model: db.Hospitals,
+					attributes: [],
+					where: {
+						id: hospitalId
+					}
+				}
+				]
+			});
+			console.log(3);
+			if (doctorHospital.length <= 0) {
+				return {
+					type: false,
+					message: language[lang].error.doctor_hospital
+				};
+			}
+			const dateResult = await db.Appointments.findAll({
+				where: {
+					userId: req.body.userId,
+					doctor: req.body.doctor,
+					[Op.or]: [
+						{ entryDate: { [Op.between]: [eDate, releaseDate] } },
+						{ releaseDate: { [Op.between]: [eDate, releaseDate] } }
+					]
+				}
+			});
+			console.log(4);
+			if (dateResult.length > 0) {
+				return {
+					type: false,
+					message: (language[lang].appointment_not_created.already_exists)
+				};
+			}
 			if (updateResult === null) {
 				return {
 					type: false,
@@ -131,12 +343,13 @@ class AppointmentService {
 				};
 			}
 			else {
+				console.log(1);
 				updateResult.set({
 					userId: req.body.userId,
 					doctor: req.body.doctor,
 					hospitalId: req.body.hospitalId,
 					entryDate: req.body.entryDate,
-					releaseDate: req.body.releaseDate
+					releaseDate: releaseDate
 				});
 				await updateResult.save();
 				return {

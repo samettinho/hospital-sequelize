@@ -16,12 +16,13 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: 'hospitalId'
 			});
 			Hospitals.belongsToMany(models.User, {
+				as: 'doctors',
 				through: 'doctorHospitals',
-				foreignKey: 'doctorId'
+				foreignKey: 'hospitalId'
 			});
-			Hospitals.hasMany(models.Appointments, {foreignKey: 'hospitalId'});
+			Hospitals.hasMany(models.Appointments, { foreignKey: 'hospitalId' });
 		}
-	
+
 	}
 	Hospitals.init({
 		hospitalName: DataTypes.STRING

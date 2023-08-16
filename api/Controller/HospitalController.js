@@ -3,6 +3,21 @@ import HospitalValidation from '../src/validations/HospitalValidation';
 
 class HospitalController {
 
+	/**
+	 * @typedef Hospitals
+	 * @property {string} hospitalName.required
+	 * 
+	 */
+	/**
+	 * @swagger
+	 * @typedef Hospitals
+	 * @route POST /hospitals
+	 * @group Hospitals - Post operation about hospitals
+	 * @summary endpoint for adding a hospitals
+	 * @param {Hospitals.model} Hospitals.body.required
+	 * @returns {object} 200 - An array of  hospitals info
+	 * @returns {Errors} 500 - Internal server error
+	 */
 	static async create(req, res) {
 		try {
 			const validation = await HospitalValidation.createValidation(req.body);
@@ -32,6 +47,13 @@ class HospitalController {
 			});
 		}
 	}
+	/**
+	 * @route GET /hospitals
+	 * @group Hospitals
+	 * @summary get all hospitals
+	 * @returns {object} 200 - An array of  hospitals info
+	 * @returns {Errors} 500 - Internal server error
+	 */
 	static async getAll(req, res) {
 		const result = await HospitalService.getAll(req);
 		if (!result.type) {
@@ -46,6 +68,14 @@ class HospitalController {
 			data: result.data
 		});
 	}
+	/**
+	 * @route GET /hospitals/{id}
+	 * @group Hospitals
+	 * @summary get  hospitals
+	 * @param {number} id.path.required - ID
+	 * @returns {object} 200 - An array of  hospitals info
+	 * @returns {Errors} 500 - Internal server error
+	 */
 	static async get(req, res) {
 		const result = await HospitalService.get(req);
 		if (!result.type) {
@@ -60,7 +90,22 @@ class HospitalController {
 			data: result.data
 		});
 	}
-
+	/**
+	 * @typedef Hospitals
+	 * @property {number} id.required 
+	 * @property {string} hospitalName.required
+	 * 
+	 */
+	/**
+	 * @swagger
+	 * @typedef Hospitals
+	 * @route PUT /hospitals
+	 * @group Hospitals - Post operation about hospitals
+	 * @summary endpoint for updated a hospitals
+	 * @param {Hospitals.model} Hospitals.body.required
+	 * @returns {object} 200 - An array of  hospitals info
+	 * @returns {Errors} 500 - Internal server error
+	 */
 	static async update(req, res) {
 		const validation = await HospitalValidation.createValidation(req.body);
 		if (!validation.type) {
@@ -82,7 +127,15 @@ class HospitalController {
 			data: result.data
 		});
 	}
-
+	/**
+	 * @swagger
+	 * @route DELETE /hospitals/{id}
+	 * @group Hospitals - Delete operation about a hospitals
+	 * @summary Delete a hospitals from database
+	 * @param {number} id.path.required - ID  
+	 * @returns {object} 200 - An array of  hospitals info
+	 * @returns {Errors} 500 - Internal server error
+	 */
 	static async delete(req, res) {
 		const result = await HospitalService.delete(req);
 		if (!result.type) {
