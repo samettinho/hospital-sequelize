@@ -11,7 +11,6 @@ chai.use(chaiHttp);
 chai.should();
 
 describe(' Hospital Appointment Servise testing', () => {
-
   it('get all', (done) => {
     chai.request(app)
       .get('/users')

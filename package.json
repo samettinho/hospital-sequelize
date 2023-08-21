@@ -4,14 +4,14 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "asd": "set NODE_ENV=test && npx sequelize db:migrate:undo:all --env 'test'&& npx sequelize db:migrate --env 'test'&& npx sequelize db:seed:all --env 'test' && mocha api/test --require babel-register -r dotenv/config",
-    "test": "mocha api/test --require babel-register -r dotenv/config",
+    "test": "set NODE_ENV=test&&npx sequelize db:migrate:undo:all --env 'test'&&npx sequelize db:migrate --env 'test'&&npx sequelize db:seed:all --env 'test'&&mocha --require @babel/register ./api/test/*.js --timeout 10000 --exit",
     "start": "nodemon --exec babel-node app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/register": "^7.22.5",
     "@hapi/joi": "^17.1.1",
     "@joi/date": "^2.1.0",
     "body-parser": "^1.20.2",

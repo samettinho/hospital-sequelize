@@ -6,7 +6,7 @@ module.exports = {
 		database: 'hospitalApp',
 		host: 'localhost',
 		port: 2855,
-		dialect: 'postgresql',
+		dialect: 'postgres',
 		logging: false,
 		dialectOptions: {
 
@@ -21,10 +21,6 @@ module.exports = {
 		port: 2855,
 		dialect: 'postgres',
 		logging: false,
-		dialectOptions: {
-
-		},
-
 		timezone: '+03:00'
 	},
 	production: {
