@@ -1,20 +1,25 @@
 import AuthorisationService from '../Service/AuthorisationService';
 import AuthorisationValidation from '../src/validations/AuthorisationValidation';
+/**
+ * @typedef AuthorisationCreate
+ * @property {string} authorisationStatement.required
+ * 
+ */
+/**
+ * @typedef AuthorisationPut
+ * @property {number} id.required
+ * @property {string} authorisationStatement.required
+ * 
+ */
 
 class AuthorisationController {
 
 	/**
-	 * @typedef Authorisation
-	 * @property {string} authorisationStatement.required
-	 * 
-	 */
-	/**
 	 * @swagger
-	 * @typedef Authorisation
 	 * @route POST /authorisations
 	 * @group Authorisations - Post operation about authorisation
 	 * @summary endpoint for adding a authorisation
-	 * @param {Authorisations.model} Authorisations.body.required
+	 * @param {AuthorisationCreate.model} body.body.required
 	 * @returns {object} 200 - An array of  authorisation info
 	 * @returns {Errors} 500 - Internal server error
 	 */
@@ -90,19 +95,13 @@ class AuthorisationController {
 			data: result.data
 		});
 	}
-	/**
-	 * @typedef Authorisation
-	 * @property {number} id.required
-	 * @property {string} authorisationStatement.required
-	 * 
-	 */
+
 	/**
 	 * @swagger
-	 * @typedef Authorisation
 	 * @route PUT /authorisation
 	 * @group Authorisations - PUT operation about authorisation
 	 * @summary endpoint for updated a authorisation
-	 * @param {Authorisations.model} Authorisations.body.required
+	 * @param {AuthorisationPut.model} body.body.required
 	 * @returns {object} 200 - An array of  authorisation info
 	 * @returns {Errors} 500 - Internal server error
 	 */

@@ -10,10 +10,10 @@ import { it } from 'mocha';
 chai.use(chaiHttp);
 chai.should();
 
-describe(' Hospital Appointment User Service testing', () => {
-  it('get all users', (done) => {
+describe(' Hospital Appointment  Service testing', () => {
+  it('get all appointment', (done) => {
     chai.request(app)
-      .get('/users')
+      .get('/appointments')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -27,14 +27,14 @@ describe(' Hospital Appointment User Service testing', () => {
           'data'
         );
         res.body.should.have.property('type').equal(true);
-
+        res.body.data.length.should.be.equal(3);
         done();
       });
   });
 
-  it('get one user', (done) => {
+  it('get one appointment', (done) => {
     chai.request(app)
-      .get('/users/2')
+      .get('/appointments/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -49,14 +49,14 @@ describe(' Hospital Appointment User Service testing', () => {
           'data'
         );
         res.body.should.have.property('type').equal(true);
-
+        res.body.data.should.have.property('doctor_full_name').equal('Samet Yılmaz');
         done();
       });
   });
 
-  it('get non user', (done) => {
+  it('get non appointment', (done) => {
     chai.request(app)
-      .get('/users/9')
+      .get('/appointments/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -70,21 +70,20 @@ describe(' Hospital Appointment User Service testing', () => {
           'message'
         );
         res.body.should.have.property('type').equal(false);
-        res.body.should.have.property('message').equal('kullanici bulunamadi');
+        res.body.should.have.property('message').equal('randevu bulunamadi');
         done();
       });
   });
   let id;
-  it('user create', (done) => {
+  it('appointment create', (done) => {
     const body = {
-      'tc': '85749652585',
-      'name': 'tufan',
-      'surName': 'tosun',
-      'phone': '5486953256',
-      'email': 'tufan@gmail.com'
+      userId: 4,
+      doctor: 3,
+      hospitalId: 1,
+      entryDate: '2023-08-20 17:45:00'
     };
     chai.request(app)
-      .post('/users')
+      .post('/appointments')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -105,10 +104,9 @@ describe(' Hospital Appointment User Service testing', () => {
       });
   });
 
-  it('get created user', (done) => {
-
+  it('get created appointment', (done) => {
     chai.request(app)
-      .get(`/users/${id}`)
+      .get(`/appointments/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -123,21 +121,20 @@ describe(' Hospital Appointment User Service testing', () => {
           'data'
         );
         res.body.should.have.property('type').equal(true);
-
+        res.body.data.should.have.property('hospital_name').equal('Medicana');
         done();
       });
   });
 
-  it('add existing user', (done) => {
+  it('Cannot create an appointment with a non-user', (done) => {
     const body = {
-      'tc': '"65235874158"',
-      'name': 'bercan',
-      'surName': 'tosun',
-      'phone': '5486953256',
-      'email': 'tufan@gmail.com'
+      'userId': 47,
+      'doctor': 2,
+      'hospitalId': 2,
+      'entryDate': '2023-08-20 17:45:00'
     };
     chai.request(app)
-      .post('/users')
+      .post('/appointments')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -152,21 +149,20 @@ describe(' Hospital Appointment User Service testing', () => {
           'message'
         );
         res.body.should.have.property('type').equal(false);
-
+        res.body.should.have.property('message').equal('Böyle bir kullanici yok');
         done();
       });
   });
 
-  it('incorrect information entry adding  user', (done) => {
+  it('Cannot create an appointment with a non-doctor', (done) => {
     const body = {
-      'tc': '"6523584158"',
-      'name': 'bercan',
-      'surName': 'tosun',
-      'phone': '5486953256',
-      'email': 'tufan@gmail.com'
+      'userId': 6,
+      'doctor': 3,
+      'hospitalId': 2,
+      'entryDate': '2023-08-20 17:45:00'
     };
     chai.request(app)
-      .post('/users')
+      .post('/appointments')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -181,22 +177,49 @@ describe(' Hospital Appointment User Service testing', () => {
           'message'
         );
         res.body.should.have.property('type').equal(false);
-
+        res.body.should.have.property('message').equal('doktor ve hastane eşleşmiyor');
         done();
       });
   });
 
-  it('update user', (done) => {
+  it('incorrect information entry adding  appointment', (done) => {
+    const body = {
+      'userId': 4,
+      'doctor': 3,
+      'hospitalId': 1,
+      'entryDate': '2023-08-20 17:45:00'
+    };
+    chai.request(app)
+      .post('/appointments')
+      .set('language', 'tr')
+      .send(body)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.keys(
+          'type',
+          'message'
+        );
+        res.body.should.have.property('type').equal(false);
+        res.body.should.have.property('message').equal('randevu oluşturulamadi. saat dolu.');
+        done();
+      });
+  });
+
+  it('update appointment', (done) => {
     const body = {
       'id': id,
-      'tc': '85216325253',
-      'name': 'ali veli',
-      'surName': 'tosun',
-      'phone': '5486953256',
-      'email': 'tosun@gmail.com'
+      'userId': 4,
+      'doctor': 3,
+      'hospitalId': 1,
+      'entryDate': '2023-08-20 18:45:00'
     };
     chai.request(app)
-      .put('/users')
+      .put('/appointments')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -217,9 +240,9 @@ describe(' Hospital Appointment User Service testing', () => {
       });
   });
 
-  it('get updated user', (done) => {
+  it('get updated appointment', (done) => {
     chai.request(app)
-      .get(`/users/${id}`)
+      .get(`/appointments/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -234,27 +257,21 @@ describe(' Hospital Appointment User Service testing', () => {
           'data'
         );
         res.body.should.have.property('type').equal(true);
-        res.body.should.have.property('data').property('tc').equal('85216325253');
-        res.body.should.have.property('data').property('name').equal('ali veli');
-        res.body.should.have.property('data').property('surName').equal('tosun');
-        res.body.should.have.property('data').property('phone').equal('5486953256');
-        res.body.should.have.property('data').property('email').equal('tosun@gmail.com');
 
         done();
       });
   });
 
-  it('wrong update  user', (done) => {
+  it('wrong update  appointment', (done) => {
     const body = {
       'id': id,
-      'tc': '8',
-      'name': 'tufan',
-      'surName': 'tosun',
-      'phone': '5486953256',
-      'email': 'tufan@gmail.com'
+      'userId': 4,
+      'doctor': 3,
+      'hospitalId': 1,
+      'entryDate': '2023-08-20 17:25:00'
     };
     chai.request(app)
-      .put('/users')
+      .put('/appointments')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -274,9 +291,9 @@ describe(' Hospital Appointment User Service testing', () => {
       });
   });
 
-  it('delete user that doesnt exist', (done) => {
+  it('delete appointment that doesnt exist', (done) => {
     chai.request(app)
-      .delete('/users/9')
+      .delete('/appointments/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -296,9 +313,9 @@ describe(' Hospital Appointment User Service testing', () => {
       });
   });
 
-  it('delete user', (done) => {
+  it('delete appointment', (done) => {
     chai.request(app)
-      .delete('/users/7')
+      .delete('/appointments/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -317,9 +334,9 @@ describe(' Hospital Appointment User Service testing', () => {
       });
   });
 
-  it('check deleted user', (done) => {
+  it('check deleted appointment', (done) => {
     chai.request(app)
-      .delete('/users/7')
+      .delete('/appointments/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {

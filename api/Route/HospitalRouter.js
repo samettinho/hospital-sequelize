@@ -3,17 +3,10 @@ import HospitalController from '../Controller/HospitalController';
 
 const app = express();
 
-app.get('/hospitals/:id', HospitalController.get);
-app.delete('/hospitals/:id', HospitalController.delete);
-app.get('/hospitals', HospitalController.getAll);
-app.post('/hospitals', HospitalController.create);
-app.put('/hospitals', HospitalController.update);
-
-/*
- * app.post('/hospitalAdd', HospitalController.create);
- * app.post('/hospitals', HospitalController.get);
- * app.put('/hospitalUpdate', HospitalController.update);
- * app.delete('/hospitalDelete', HospitalController.delete);
- */
+app.get('/:id', HospitalController.get);
+app.delete('/:id', HospitalController.delete);
+app.get('', HospitalController.getAll);
+app.post('', HospitalController.create);
+app.put('', HospitalController.update);
 
 module.exports = app;

@@ -1,22 +1,28 @@
 import AppointmentService from '../Service/AppointmentService';
 import AppointmentValidation from '../src/validations/AppointmentValidation';
-
+/**
+ * @typedef AppointmentCreate
+ * @property {number} userId.required
+ * @property {number} doctor.required
+ * @property {number} hospitalId.required
+ * @property {string} entryDate.required
+ */
+/**
+ * @typedef AppointmentsUpdate
+ * @property {number} id.required
+ * @property {number} userId.required
+ * @property {number} doctor.required
+ * @property {number} hospitalId.required
+ * @property {string} entryDate.required
+ */
 class AppointmentController {
 
 	/**
-	 * @typedef Appointments
-	 * @property {number} userId.required
-	 * @property {number} doctor.required
-	 * @property {number} hospitalId.required
-	 * @property {string} entryDate.required
-	 */
-	/**
 	 * @swagger
-	 * @typedef Appointments
 	 * @route POST /appointments
 	 * @group Appointments - Post operation about Appointments
 	 * @summary endpoint for adding a roles
-	 * @param {Appointments.model} Appointments.body.required
+	 * @param {AppointmentCreate.model} body.body.required
 	 * @returns {object} 200 - An array of  Appointments info
 	 * @returns {Errors} 500 - Internal server error
 	 */
@@ -38,7 +44,8 @@ class AppointmentController {
 			}
 			return res.json({
 				type: true,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
 		catch (error) {
@@ -91,21 +98,13 @@ class AppointmentController {
 			data: result.data
 		});
 	}
-	/**
-	 * @typedef Appointments
-	 * @property {number} id.required
-	 * @property {number} userId.required
-	 * @property {number} doctor.required
-	 * @property {number} hospitalId.required
-	 * @property {string} entryDate.required
-	 */
+
 	/**
 	 * @swagger
-	 * @typedef Appointments
 	 * @route PUT /appointments
 	 * @group Appointments - Post operation about Appointments
 	 * @summary endpoint for adding a roles
-	 * @param {Appointments.model} Appointments.body.required
+	 * @param {AppointmentsUpdate.model} Appointments.body.required
 	 * @returns {object} 200 - An array of  Appointments info
 	 * @returns {Errors} 500 - Internal server error
 	 */

@@ -1,24 +1,30 @@
 import UserService from '../Service/UserService';
 import UserValidation from '../src/validations/UserValidation';
-
+/**
+ * @typedef UserCreate
+ * @property {string} tc.required
+ * @property {string} name.required
+ * @property {string} surName.required
+ * @property {string} phone.required
+ * @property {string} email.required 
+ */
+/**
+ * @typedef UserPut
+ * @property {number} id.required
+ * @property {string} tc.required
+ * @property {string} name.required
+ * @property {string} surName.required
+ * @property {string} phone.required
+ * @property {string} email.required
+ */
 class UserController {
 
 	/**
-	 * @typedef Users
-	 * @property {string} tc.required
-	 * @property {string} name.required
-	 * @property {string} surName.required
-	 * @property {string} phone.required
-	 * @property {string} email.required
-	 * 
-	 */
-	/**
 	 * @swagger
-	 * @typedef Users
 	 * @route POST /users
 	 * @group Users - Post operation about users
 	 * @summary endpoint for adding a Users
-	 * @param {Users.model} Users.body.required
+	 * @param {UserCreate.model} body.body.required
 	 * @returns {object} 200 - An array of  users info
 	 * @returns {Errors} 500 - Internal server error
 	 */
@@ -117,23 +123,13 @@ class UserController {
 			data: result.data
 		});
 	}
-	/**
-	 * @typedef Users
-	 * @property {number} id.required
-	 * @property {string} tc.required
-	 * @property {string} name.required
-	 * @property {string} surName.required
-	 * @property {string} phone.required
-	 * @property {string} email.required
-	 * 
-	 */
+
 	/**
 	 * @swagger
-	 * @typedef Users
 	 * @route PUT /users
 	 * @group Users - Put operation about users
 	 * @summary endpoint for adding a Users
-	 * @param {Users.model} Users.body.required
+	 * @param {UserPut.model} Users.body.required
 	 * @returns {object} 200 - An array of  users info
 	 * @returns {Errors} 500 - Internal server error
 	 */

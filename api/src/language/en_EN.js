@@ -19,7 +19,8 @@ export default {
     appointment_not_created: 'The appointment could not be created. the hour is full.',
     doctor_hospital: 'doctor and hospital do not match',
     appointment_notC: 'appointment not created',
-    userDelete: 'The user has an appointment. cannot be deleted'
+    userDelete: 'The user has an appointment. cannot be deleted',
+    user_not_found: 'Cannot create an appointment with a non-user'
   }
 
 

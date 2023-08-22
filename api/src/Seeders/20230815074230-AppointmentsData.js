@@ -26,13 +26,6 @@ module.exports = {
         hospitalId: 1,
         entryDate: '2023-08-20 17:25:00',
         releaseDate: '2023-08-20 17:40:00'
-      },
-      {
-        userId: 4,
-        doctor: 3,
-        hospitalId: 1,
-        entryDate: '2023-08-20 17:45:00',
-        releaseDate: '2023-08-20 18:00:00'
       }], {});
 
   },

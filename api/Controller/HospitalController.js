@@ -1,20 +1,23 @@
 import HospitalService from '../Service/HospitalService';
 import HospitalValidation from '../src/validations/HospitalValidation';
 
+/**
+ * @typedef HospitalCreate
+ * @property {string} hospitalName.required
+ */
+/**
+ * @typedef HospitalPut
+ * @property {number} id.required 
+ * @property {string} hospitalName.required
+ */
 class HospitalController {
 
 	/**
-	 * @typedef Hospitals
-	 * @property {string} hospitalName.required
-	 * 
-	 */
-	/**
 	 * @swagger
-	 * @typedef Hospitals
 	 * @route POST /hospitals
 	 * @group Hospitals - Post operation about hospitals
 	 * @summary endpoint for adding a hospitals
-	 * @param {Hospitals.model} Hospitals.body.required
+	 * @param {HospitalCreate.model} body.body.required
 	 * @returns {object} 200 - An array of  hospitals info
 	 * @returns {Errors} 500 - Internal server error
 	 */
@@ -91,18 +94,12 @@ class HospitalController {
 		});
 	}
 	/**
-	 * @typedef Hospitals
-	 * @property {number} id.required 
-	 * @property {string} hospitalName.required
-	 * 
-	 */
-	/**
 	 * @swagger
-	 * @typedef Hospitals
+	 * @typedef HospitalPut
 	 * @route PUT /hospitals
 	 * @group Hospitals - Post operation about hospitals
 	 * @summary endpoint for updated a hospitals
-	 * @param {Hospitals.model} Hospitals.body.required
+	 * @param {HospitalPut.model} body.body.required
 	 * @returns {object} 200 - An array of  hospitals info
 	 * @returns {Errors} 500 - Internal server error
 	 */

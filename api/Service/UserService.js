@@ -160,6 +160,17 @@ class UserService {
 					id: req.body.id
 				}
 			});
+			const updateTc = await db.User.findOne({
+				where: {
+					tc: req.body.tc
+				}
+			});
+			if (updateTc !== null) {
+				return {
+					type: false,
+					message: (language[lang].error.already_exists)
+				};
+			}
 			if (updateResult === null) {
 				return {
 					type: false,

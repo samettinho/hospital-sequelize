@@ -1,20 +1,22 @@
 import RoleService from '../Service/RoleService';
 import RoleValidation from '../src/validations/RoleValidation';
-
+/**
+ * @typedef RoleCreate
+ * @property {string} rolName.required
+ */
+/**
+ * @typedef RolePut
+ * @property {number} id.required
+ * @property {string} rolName.required
+ */
 class RoleController {
 
 	/**
-	 * @typedef Roles
-	 * @property {string} rolName.required
-	 * 
-	 */
-	/**
 	 * @swagger
-	 * @typedef Roles
 	 * @route POST /roles
 	 * @group Roles - Post operation about roles
 	 * @summary endpoint for adding a roles
-	 * @param {Roles.model} Roles.body.required
+	 * @param {RoleCreate.model} body.body.required
 	 * @returns {object} 200 - An array of  roles info
 	 * @returns {Errors} 500 - Internal server error
 	 */
@@ -90,19 +92,14 @@ class RoleController {
 			data: result.data
 		});
 	}
-	/**
-	 * @typedef Roles
-	 * @property {number} id.required
-	 * @property {string} rolName.required
-	 * 
-	 */
+
 	/**
 	 * @swagger
-	 * @typedef Roles
+	 * @typedef RolePut
 	 * @route PUT /roles
 	 * @group Roles - Post operation about roles
 	 * @summary endpoint for updated a roles
-	 * @param {Roles.model} Roles.body.required
+	 * @param {RolePut.model} Roles.body.required
 	 * @returns {object} 200 - An array of  roles info
 	 * @returns {Errors} 500 - Internal server error
 	 */

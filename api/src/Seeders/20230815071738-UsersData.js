@@ -33,6 +33,12 @@ module.exports = {
       surName: 'demircioğlu',
       phone: '5486953225',
       email: 'demircioğlu@gmail.com'
+    }, {
+      tc: '85963268541',
+      name: 'süleyman',
+      surName: 'arzum',
+      phone: '5485263252',
+      email: 'süleyman@gmail.com'
     }
 
     ], {});

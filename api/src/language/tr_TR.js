@@ -12,7 +12,8 @@ export default {
     appointment_not_created: 'randevu oluşturulamadi. saat dolu.',
     doctor_hospital: 'doktor ve hastane eşleşmiyor',
     appointment_notC: 'randevu olusturalamadı',
-    userDelete: 'kullanıcnını randevusu var silinemez'
+    userDelete: 'kullanıcnını randevusu var silinemez',
+    user_not_found: 'Böyle bir kullanici yok'
   },
   "tables": {
     user: "kullanici",

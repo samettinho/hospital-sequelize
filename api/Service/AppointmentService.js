@@ -16,7 +16,18 @@ class AppointmentService {
 			const entryDate = moment(req.body.entryDate);
 			const eDate = entryDate.format('YYYY-MM-DD HH:mm:ss');
 			const releaseDate = entryDate.add(15, 'm').format('YYYY-MM-DD HH:mm:ss');
+			const userResult = await db.User.findOne({
+				where: {
+					id: req.body.userId
+				}
+			});
+			if (userResult === null) {
+				return {
+					type: false,
+					message: (language[lang].error.user_not_found)
+				};
 
+			}
 			const doctorResult = await db.User.findAll({
 				where: [
 					{
@@ -90,7 +101,7 @@ class AppointmentService {
 					message: language[lang].error.appointment_not_created
 				};
 			}
-			const [, created] = await db.Appointments.findOrCreate({
+			const [createdResult, created] = await db.Appointments.findOrCreate({
 				where: {
 					entryDate: req.body.entryDate,
 					doctor: doctor
@@ -106,7 +117,8 @@ class AppointmentService {
 			if (created) {
 				return {
 					type: true,
-					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.appointment)
+					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.appointment),
+					data: createdResult
 				};
 			}
 			else {
@@ -214,7 +226,7 @@ class AppointmentService {
 					return {
 						type: false,
 						// eslint-disable-next-line max-len
-						message: (language[lang].error.not_found).replace('{#tables}', language[lang].tables.appointment)
+						message: (language[lang].error.not_found).replace('{}', language[lang].tables.appointment)
 					};
 				}
 				return {
@@ -237,21 +249,19 @@ class AppointmentService {
 			const entryDate = moment(req.body.entryDate);
 			const eDate = entryDate.format('YYYY-MM-DD HH:mm:ss');
 			const releaseDate = entryDate.add(15, 'm').format('YYYY-MM-DD HH:mm:ss');
-			console.log('releaseDate--->', releaseDate);
 			const lang = req.headers.lang;
+
 			const updateResult = await db.Appointments.findOne({
 				where: {
 					id: req.body.id
 				}
 			});
-			console.log(4554);
 			const appointments = await db.Appointments.findAll({
 				where: {
 					doctor: req.body.doctor,
 					entryDate: req.body.entryDate
 				}
 			});
-			console.log(1);
 			if (appointments.length > 0) {
 				return {
 					type: false,
@@ -278,7 +288,6 @@ class AppointmentService {
 				}
 				]
 			});
-			console.log(2);
 			if (doctorResult.length <= 0) {
 				return {
 					type: false,
@@ -312,7 +321,6 @@ class AppointmentService {
 				}
 				]
 			});
-			console.log(3);
 			if (doctorHospital.length <= 0) {
 				return {
 					type: false,
@@ -329,7 +337,6 @@ class AppointmentService {
 					]
 				}
 			});
-			console.log(4);
 			if (dateResult.length > 0) {
 				return {
 					type: false,
@@ -343,7 +350,6 @@ class AppointmentService {
 				};
 			}
 			else {
-				console.log(1);
 				updateResult.set({
 					userId: req.body.userId,
 					doctor: req.body.doctor,
