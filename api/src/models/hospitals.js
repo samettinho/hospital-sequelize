@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
 
 	}
 	Hospitals.init({
-		hospitalName: DataTypes.STRING
+		hospitalName: DataTypes.STRING,
+		isRemoved: DataTypes.BOOLEAN
 	}, {
 		sequelize,
 		modelName: 'Hospitals'

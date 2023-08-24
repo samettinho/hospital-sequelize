@@ -1,11 +1,12 @@
-let options = {
+require('dotenv').config();
+const options = {
   swaggerDefinition: {
     info: {
       description: 'this is a server with basic API features',
       title: 'Hospital Appointment',
       version: '1.0.0'
     },
-    host: 'localhost:3000', //bu da env
+    host: process.env.DB_SWAGGER_URL,
     basePath: '',
     produces: ['application/json', 'application/xml'],
     schemas: ['http', 'https'],

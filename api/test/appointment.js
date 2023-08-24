@@ -13,7 +13,7 @@ chai.should();
 describe(' Hospital Appointment  Service testing', () => {
   it('get all appointment', (done) => {
     chai.request(app)
-      .get('/appointments')
+      .get('/appointment')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -34,7 +34,7 @@ describe(' Hospital Appointment  Service testing', () => {
 
   it('get one appointment', (done) => {
     chai.request(app)
-      .get('/appointments/2')
+      .get('/appointment/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -56,7 +56,7 @@ describe(' Hospital Appointment  Service testing', () => {
 
   it('get non appointment', (done) => {
     chai.request(app)
-      .get('/appointments/9')
+      .get('/appointment/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -83,7 +83,7 @@ describe(' Hospital Appointment  Service testing', () => {
       entryDate: '2023-08-20 17:45:00'
     };
     chai.request(app)
-      .post('/appointments')
+      .post('/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -106,7 +106,7 @@ describe(' Hospital Appointment  Service testing', () => {
 
   it('get created appointment', (done) => {
     chai.request(app)
-      .get(`/appointments/${id}`)
+      .get(`/appointment/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -134,7 +134,7 @@ describe(' Hospital Appointment  Service testing', () => {
       'entryDate': '2023-08-20 17:45:00'
     };
     chai.request(app)
-      .post('/appointments')
+      .post('/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -162,7 +162,7 @@ describe(' Hospital Appointment  Service testing', () => {
       'entryDate': '2023-08-20 17:45:00'
     };
     chai.request(app)
-      .post('/appointments')
+      .post('/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -190,7 +190,7 @@ describe(' Hospital Appointment  Service testing', () => {
       'entryDate': '2023-08-20 17:45:00'
     };
     chai.request(app)
-      .post('/appointments')
+      .post('/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -216,10 +216,10 @@ describe(' Hospital Appointment  Service testing', () => {
       'userId': 4,
       'doctor': 3,
       'hospitalId': 1,
-      'entryDate': '2023-08-20 18:45:00'
+      'entryDate': '2023-08-21 18:45:00'
     };
     chai.request(app)
-      .put('/appointments')
+      .put('/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -242,7 +242,7 @@ describe(' Hospital Appointment  Service testing', () => {
 
   it('get updated appointment', (done) => {
     chai.request(app)
-      .get(`/appointments/${id}`)
+      .get(`/appointment/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -271,7 +271,7 @@ describe(' Hospital Appointment  Service testing', () => {
       'entryDate': '2023-08-20 17:25:00'
     };
     chai.request(app)
-      .put('/appointments')
+      .put('/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -293,7 +293,7 @@ describe(' Hospital Appointment  Service testing', () => {
 
   it('delete appointment that doesnt exist', (done) => {
     chai.request(app)
-      .delete('/appointments/9')
+      .delete('/appointment/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -315,7 +315,7 @@ describe(' Hospital Appointment  Service testing', () => {
 
   it('delete appointment', (done) => {
     chai.request(app)
-      .delete('/appointments/2')
+      .delete('/appointment/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -336,7 +336,7 @@ describe(' Hospital Appointment  Service testing', () => {
 
   it('check deleted appointment', (done) => {
     chai.request(app)
-      .delete('/appointments/2')
+      .delete('/appointment/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {

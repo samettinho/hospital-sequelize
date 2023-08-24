@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
 
 	}
 	Authorisation.init({
-		authorisationStatement: DataTypes.STRING
+		authorisationStatement: DataTypes.STRING,
+		isRemoved: DataTypes.BOOLEAN
 	}, {
 		sequelize,
 		modelName: 'Authorisation'

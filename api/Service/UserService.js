@@ -2,6 +2,8 @@
 
 import db from '../src/models';
 import language from '../src/language';
+import { Op } from 'sequelize';
+import RolesEnum from '../src/enum/RolesEnum';
 
 class UserService {
 
@@ -15,9 +17,56 @@ class UserService {
 				surName,
 				phone,
 				email,
-				roleId
+				roleId,
+				hospitalId
 			} = req.body;
-
+			const createResult = await db.Users.findOne({
+				where: { tc: tc }
+			});
+			if (createResult) {
+				return {
+					type: false,
+					message: (language[lang].error.already_exists)
+				};
+			}
+			if (roleId === RolesEnum.doktor) {
+				const HospitalResult = await db.Hospitals.findOne({
+					where: { id: hospitalId }
+				});
+				if (!HospitalResult) {
+					return {
+						type: false,
+						message: 'hastane bulunamadı'
+					};
+				}
+				const createUser = await db.Users.create({
+					tc: tc,
+					name: name,
+					surName: surName,
+					phone: phone,
+					email: email,
+					UsersRoles: {
+						roleId: roleId
+					},
+					doctorHospitals: {
+						hospitalId: hospitalId
+					}
+				}, {
+					include: [
+						{
+							model: db.UsersRoles
+						},
+						{
+							model: db.doctorHospitals
+						}
+					]
+				});
+				return {
+					type: true,
+					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.user),
+					data: createUser
+				};
+			}
 			const createUser = await db.Users.create({
 				tc: tc,
 				name: name,
@@ -39,7 +88,6 @@ class UserService {
 				message: (language[lang].crud.created).replace('{#table}', language[lang].tables.user),
 				data: createUser
 			};
-
 		}
 		catch (error) {
 			return {
@@ -52,7 +100,7 @@ class UserService {
 		try {
 			const lang = req.headers.lang;
 			const getResult = await db.Users.findAll({
-
+				where: { isRemoved: false },
 				attributes: [
 					'id',
 					'name',
@@ -64,7 +112,7 @@ class UserService {
 					['id', 'asc']
 				],
 				include: [{
-					model: db.Role,
+					model: db.Roles,
 					attributes: [],
 					where: [
 						{
@@ -97,6 +145,7 @@ class UserService {
 		try {
 			const lang = req.headers.lang;
 			const getResult = await db.Users.findAll({
+				where: { isRemoved: false },
 				attributes: [
 					'id',
 					'name',
@@ -110,7 +159,7 @@ class UserService {
 				],
 				include: [
 					{
-						model: db.Role,
+						model: db.Roles,
 						attributes: []
 					}
 				]
@@ -142,6 +191,7 @@ class UserService {
 			else {
 				const getResult = await db.Users.findOne({
 					where: {
+						isRemoved: false,
 						id: userid
 					}
 				});
@@ -170,6 +220,7 @@ class UserService {
 			const lang = req.headers.lang;
 			const updateResult = await db.Users.findOne({
 				where: {
+					isRemoved: false,
 					id: req.body.id
 				}
 			});
@@ -214,16 +265,19 @@ class UserService {
 		}
 	}
 	static async delete(req) {
+		const currentTimeMinus24Hours = new Date();
+
 		try {
 
 			const lang = req.headers.lang;
 			const id = req.params.id;
 			const deleteResult = await db.Users.findOne({
 				where: {
+					isRemoved: false,
 					id: id
 				}
 			});
-			if (deleteResult === null) {
+			if (!deleteResult) {
 				return {
 					type: false,
 					message: (language[lang].error.not_found).replace('{}', 'id')
@@ -231,6 +285,9 @@ class UserService {
 			}
 			const userAppointment = await db.Appointments.findAll({
 				where: {
+					entryDate: {
+						[Op.gt]: currentTimeMinus24Hours
+					},
 					userId: id
 				}
 			});
@@ -240,9 +297,12 @@ class UserService {
 					message: language[lang].error.userDelete
 				};
 			}
-			await db.Users.destroy({
-				where: { id }
+
+			await deleteResult.set({
+				isRemoved: true
 			});
+			await deleteResult.save();
+
 			return {
 				type: true,
 				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.user)

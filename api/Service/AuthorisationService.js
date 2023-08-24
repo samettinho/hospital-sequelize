@@ -38,6 +38,7 @@ class AuthorisationService {
 	static async getAll(req) {
 		const lang = req.headers.lang;
 		const getResult = await db.Authorisation.findAll({
+			where: { isRemoved: false },
 			order: [
 				['id', 'asc']
 			]
@@ -53,7 +54,7 @@ class AuthorisationService {
 		try {
 			const lang = req.headers.lang;
 			const authorisationId = req.params.id;
-			if (authorisationId === undefined) {
+			if (!authorisationId) {
 				return {
 					type: false,
 					message: (language[lang].error.connot_null).replace('{}', 'id')
@@ -62,10 +63,11 @@ class AuthorisationService {
 			else {
 				const getResult = await db.Authorisation.findOne({
 					where: {
+						isRemoved: false,
 						id: authorisationId
 					}
 				});
-				if (getResult === null) {
+				if (!getResult) {
 					return {
 						type: false,
 						message: (language[lang].error.not_found).replace('{}', language[lang].tables.authorisation)
@@ -90,10 +92,11 @@ class AuthorisationService {
 			const lang = req.headers.lang;
 			const updateResult = await db.Authorisation.findOne({
 				where: {
+					isRemoved: false,
 					id: req.body.id
 				}
 			});
-			if (updateResult === null) {
+			if (!updateResult) {
 				return {
 					type: false,
 					message: (language[lang].error.not_found).replace('{}', language[lang].tables.authorisation)
@@ -125,19 +128,20 @@ class AuthorisationService {
 			const id = req.params.id;
 			const deleteResult = await db.Authorisation.findOne({
 				where: {
+					isRemoved: false,
 					id: id
 				}
 			});
-			if (deleteResult === null) {
+			if (!deleteResult) {
 				return {
 					type: false,
 					message: (language[lang].error.not_found).replace('{}', 'id')
 				};
 			}
-
-			db.Authorisation.destroy({
-				where: { id }
+			await deleteResult.set({
+				isRemoved: true
 			});
+			await deleteResult.save();
 			return {
 				type: true,
 				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.authorisation)

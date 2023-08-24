@@ -7,6 +7,8 @@ import UserValidation from '../src/validations/UserValidation';
  * @property {string} surName.required
  * @property {string} phone.required
  * @property {string} email.required 
+ * @property {number} roleId.required
+ * @property {number} hospitalId.required
  */
 /**
  * @typedef UserPut
@@ -16,6 +18,8 @@ import UserValidation from '../src/validations/UserValidation';
  * @property {string} surName.required
  * @property {string} phone.required
  * @property {string} email.required
+ * @property {number} roleId.required
+ * @property {number} hospitalId.required
  */
 class UserController {
 

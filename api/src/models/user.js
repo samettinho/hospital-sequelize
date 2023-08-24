@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 			Users.hasMany(models.Appointments, { as: 'Users', foreignKey: 'userId' });
 			Users.hasMany(models.Appointments, { as: 'appDoctor', foreignKey: 'doctor' });
 			Users.hasMany(models.UsersRoles, { foreignKey: 'userId' });
+			Users.hasMany(models.doctorHospitals, { foreignKey: 'doctorId' });
 		}
 
 	}
@@ -26,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
 		name: DataTypes.STRING,
 		surName: DataTypes.STRING,
 		phone: DataTypes.STRING,
-		email: DataTypes.STRING
+		email: DataTypes.STRING,
+		isRemoved: DataTypes.BOOLEAN
 	}, {
 		sequelize,
 		modelName: 'Users'
