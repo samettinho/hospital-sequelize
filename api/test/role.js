@@ -13,7 +13,7 @@ chai.should();
 describe(' Hospital Appointment Roles Service testing', () => {
   it('get all roles', (done) => {
     chai.request(app)
-      .get('/roles')
+      .get('/role')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -34,7 +34,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
 
   it('get one role', (done) => {
     chai.request(app)
-      .get('/roles/2')
+      .get('/role/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -56,7 +56,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
 
   it('get non role', (done) => {
     chai.request(app)
-      .get('/roles/9')
+      .get('/role/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -80,7 +80,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
       'rolName': 'yönetici'
     };
     chai.request(app)
-      .post('/roles')
+      .post('/role')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -104,7 +104,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
   it('get created role', (done) => {
 
     chai.request(app)
-      .get(`/roles/${id}`)
+      .get(`/role/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -128,7 +128,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
       'rolName': 'admin'
     };
     chai.request(app)
-      .post('/roles')
+      .post('/role')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -154,7 +154,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
       'rolName': 'hemşire'
     };
     chai.request(app)
-      .put('/roles')
+      .put('/role')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -177,7 +177,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
 
   it('get updated role', (done) => {
     chai.request(app)
-      .get(`/roles/${id}`)
+      .get(`/role/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -199,7 +199,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
 
   it('delete role that doesnt exist', (done) => {
     chai.request(app)
-      .delete('/roles/9')
+      .delete('/role/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -221,7 +221,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
 
   it('delete role', (done) => {
     chai.request(app)
-      .delete(`/roles/${id}`)
+      .delete(`/role/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -242,7 +242,7 @@ describe(' Hospital Appointment Roles Service testing', () => {
 
   it('check deleted role', (done) => {
     chai.request(app)
-      .delete(`/roles/${id}`)
+      .delete(`/role/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {

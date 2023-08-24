@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
 				through: 'HospitalLanguages',
 				foreignKey: 'hospitalId'
 			});
-			Hospitals.belongsToMany(models.User, {
+			Hospitals.belongsToMany(models.Users, {
 				as: 'doctors',
 				through: 'doctorHospitals',
 				foreignKey: 'hospitalId'
@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
 
 	}
 	Hospitals.init({
-		hospitalName: DataTypes.STRING
+		hospitalName: DataTypes.STRING,
+		isRemoved: DataTypes.BOOLEAN
 	}, {
 		sequelize,
 		modelName: 'Hospitals'

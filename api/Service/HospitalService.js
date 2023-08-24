@@ -38,18 +38,21 @@ class HospitalService {
 	static async getAll(req) {
 		const lang = req.headers.lang;
 		const getResult = await db.Hospitals.findAll({
+			where: { isRemoved: false },
 			order: [
 				['id', 'asc']
 			],
 			include: [
 				{
 					as: 'doctors',
-					model: db.User,
+					model: db.Users,
 					attributes: [
 						'id',
 						'name',
 						'surName'
-					]
+					],
+					where: { isRemoved: false },
+					required: false
 				}
 			]
 		});
@@ -64,7 +67,7 @@ class HospitalService {
 		try {
 			const lang = req.headers.lang;
 			const hospitalId = req.params.id;
-			if (hospitalId === undefined) {
+			if (!hospitalId) {
 				return {
 					type: false,
 					message: (language[lang].error.connot_null).replace('{}', 'id')
@@ -73,10 +76,24 @@ class HospitalService {
 			else {
 				const getResult = await db.Hospitals.findOne({
 					where: {
+						isRemoved: false,
 						id: hospitalId
-					}
+					},
+					include: [
+						{
+							as: 'doctors',
+							model: db.Users,
+							attributes: [
+								'id',
+								'name',
+								'surName'
+							],
+							where: { isRemoved: false },
+							required: false
+						}
+					]
 				});
-				if (getResult === null) {
+				if (!getResult) {
 					return {
 						type: false,
 						message: (language[lang].error.not_found).replace('{}', language[lang].tables.hospital)
@@ -102,10 +119,11 @@ class HospitalService {
 			const lang = req.headers.lang;
 			const updateResult = await db.Hospitals.findOne({
 				where: {
+					isRemoved: false,
 					id: req.body.id
 				}
 			});
-			if (updateResult === null) {
+			if (!updateResult) {
 				return {
 					type: false,
 					message: (language[lang].error.not_found).replace('{}', language[lang].tables.role)
@@ -137,18 +155,20 @@ class HospitalService {
 			const id = req.params.id;
 			const deleteResult = await db.Hospitals.findOne({
 				where: {
+					isRemoved: false,
 					id: id
 				}
 			});
-			if (deleteResult === null) {
+			if (!deleteResult) {
 				return {
 					type: false,
 					message: (language[lang].error.not_found).replace('{}', 'id')
 				};
 			}
-			db.Hospitals.destroy({
-				where: { id }
+			await deleteResult.set({
+				isRemoved: true
 			});
+			await deleteResult.save();
 			return {
 				type: true,
 				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.hospital)

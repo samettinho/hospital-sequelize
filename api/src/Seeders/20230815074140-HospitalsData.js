@@ -4,16 +4,24 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Hospitals', [{
-      hospitalName: 'Medicana'
+      hospitalName: 'Medicana',
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
-      hospitalName: 'Medical Park'
+      hospitalName: 'Medical Park',
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
-      hospitalName: 'Acıbadem'
+      hospitalName: 'Acıbadem',
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
-      hospitalName: 'Medipol'
+      hospitalName: 'Medipol',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
 
   },

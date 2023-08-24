@@ -19,7 +19,7 @@ class AppointmentController {
 
 	/**
 	 * @swagger
-	 * @route POST /appointments
+	 * @route POST /appointment
 	 * @group Appointments - Post operation about Appointments
 	 * @summary endpoint for adding a roles
 	 * @param {AppointmentCreate.model} body.body.required
@@ -56,28 +56,37 @@ class AppointmentController {
 		}
 	}
 	/**
-	 * @route GET /appointments
+	 * @route GET /appointment
 	 * @group Appointments
 	 * @summary get all appointments
 	 * @returns {object} 200 - An array of  appointments info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async getAll(req, res) {
-		const result = await AppointmentService.getAll(req);
-		if (!result.type) {
+		try {
+			const result = await AppointmentService.getAll(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 	/**
-	 * @route GET /appointments/{id}
+	 * @route GET /appointment/{id}
 	 * @group Appointments
 	 * @summary get  Appointments
 	 * @param {number} id.path.required - ID
@@ -85,23 +94,32 @@ class AppointmentController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async get(req, res) {
-		const result = await AppointmentService.get(req);
-		if (!result.type) {
+		try {
+			const result = await AppointmentService.get(req);
+			if (!result.type) {
+				return res.json({
+					type: false,
+					message: result.message
+				});
+			}
 			return res.json({
-				type: false,
-				message: result.message
+				type: true,
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: true,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 
 	/**
 	 * @swagger
-	 * @route PUT /appointments
+	 * @route PUT /appointment
 	 * @group Appointments - Post operation about Appointments
 	 * @summary endpoint for adding a roles
 	 * @param {AppointmentsUpdate.model} Appointments.body.required
@@ -109,29 +127,38 @@ class AppointmentController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async update(req, res) {
-		const validation = await AppointmentValidation.createValidation(req.body);
-		if (!validation.type) {
+		try {
+			const validation = await AppointmentValidation.createValidation(req.body);
+			if (!validation.type) {
+				return res.json({
+					type: false,
+					message: validation.message
+				});
+			}
+			const result = await AppointmentService.update(req);
+			if (!result.type) {
+				return res.json({
+					type: false,
+					message: result.message
+				});
+			}
 			return res.json({
-				type: false,
-				message: validation.message
+				type: true,
+				message: result.message,
+				data: result.data
 			});
 		}
-		const result = await AppointmentService.update(req);
-		if (!result.type) {
+		catch (error) {
 			return res.json({
 				type: false,
-				message: result.message
+				message: error.message
 			});
 		}
-		return res.json({
-			type: true,
-			message: result.message,
-			data: result.data
-		});
+
 	}
 	/**
 	 * @swagger
-	 * @route DELETE /appointments/{id}
+	 * @route DELETE /appointment/{id}
 	 * @group Appointments - Delete operation about a Appointments
 	 * @summary Delete a Appointments from database
 	 * @param {number} id.path.required - ID  
@@ -139,18 +166,27 @@ class AppointmentController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async delete(req, res) {
-		const result = await AppointmentService.delete(req);
-		if (!result.type) {
+		try {
+			const result = await AppointmentService.delete(req);
+			if (!result.type) {
+				return res.json({
+					type: false,
+					message: result.message
+				});
+			}
 			return res.json({
-				type: false,
-				message: result.message
+				type: true,
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: true,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 
 }

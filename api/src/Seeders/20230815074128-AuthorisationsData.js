@@ -5,13 +5,19 @@ module.exports = {
   async up(queryInterface, Sequelize) {
 
     await queryInterface.bulkInsert('Authorisations', [{
-      authorisationStatement: 'Doktor ekle'
+      authorisationStatement: 'Doktor ekle',
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
-      authorisationStatement: 'Hastane ekle'
+      authorisationStatement: 'Hastane ekle',
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
-      authorisationStatement: 'Hasta ekle'
+      authorisationStatement: 'Hasta ekle',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
 
   },

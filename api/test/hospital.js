@@ -13,7 +13,7 @@ chai.should();
 describe(' Hospital Appointment Hospital Service  testing', () => {
   it('get all hospitals', (done) => {
     chai.request(app)
-      .get('/hospitals')
+      .get('/hospital')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -34,7 +34,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
 
   it('get one hospital', (done) => {
     chai.request(app)
-      .get('/hospitals/2')
+      .get('/hospital/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -56,7 +56,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
 
   it('get non hospital', (done) => {
     chai.request(app)
-      .get('/hospitals/9')
+      .get('/hospital/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -80,7 +80,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
       'hospitalName': 'Pendik Devlet'
     };
     chai.request(app)
-      .post('/hospitals')
+      .post('/hospital')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -104,7 +104,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
   it('get created hospital', (done) => {
 
     chai.request(app)
-      .get(`/hospitals/${id}`)
+      .get(`/hospital/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -128,7 +128,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
       'hospitalName': 'Medipol'
     };
     chai.request(app)
-      .post('/hospitals')
+      .post('/hospital')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -154,7 +154,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
       'hospitalName': 'Kartal Devlet'
     };
     chai.request(app)
-      .put('/hospitals')
+      .put('/hospital')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -177,7 +177,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
 
   it('get updated hospital', (done) => {
     chai.request(app)
-      .get(`/hospitals/${id}`)
+      .get(`/hospital/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -199,7 +199,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
 
   it('delete hospital that doesnt exist', (done) => {
     chai.request(app)
-      .delete('/hospitals/9')
+      .delete('/hospital/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -221,7 +221,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
 
   it('delete hospital', (done) => {
     chai.request(app)
-      .delete(`/hospitals/${id}`)
+      .delete(`/hospital/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -242,7 +242,7 @@ describe(' Hospital Appointment Hospital Service  testing', () => {
 
   it('check deleted hospital', (done) => {
     chai.request(app)
-      .delete(`/hospitals/${id}`)
+      .delete(`/hospital/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {

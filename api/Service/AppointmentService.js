@@ -11,31 +11,36 @@ class AppointmentService {
 	static async create(req) {
 		try {
 			const lang = req.headers.lang;
-			const doctor = req.body.doctor;
-			const hospitalId = req.body.hospitalId;
+			const {
+				doctor,
+				hospitalId
+			} = req.body;
+
 			const entryDate = moment(req.body.entryDate);
 			const eDate = entryDate.format('YYYY-MM-DD HH:mm:ss');
 			const releaseDate = entryDate.add(15, 'm').format('YYYY-MM-DD HH:mm:ss');
-			const userResult = await db.User.findOne({
+			const userResult = await db.Users.findOne({
 				where: {
-					id: req.body.userId
+					id: req.body.userId,
+					isRemoved: false
 				}
 			});
-			if (userResult === null) {
+			if (!userResult) {
 				return {
 					type: false,
 					message: (language[lang].error.user_not_found)
 				};
 
 			}
-			const doctorResult = await db.User.findAll({
+			const doctorResult = await db.Users.findAll({
 				where: [
 					{
+						isRemoved: false,
 						id: doctor
 					}
 				],
 				include: [{
-					model: db.Role,
+					model: db.Roles,
 					attributes: [],
 					where: [
 						{
@@ -51,9 +56,10 @@ class AppointmentService {
 					message: (language[lang].error.not_found).replace('{}', 'doktor')
 				};
 			}
-			const doctorHospital = await db.User.findAll({
+			const doctorHospital = await db.Users.findAll({
 				where: [
 					{
+						isRemoved: false,
 						id: doctor
 					}
 				],
@@ -61,7 +67,7 @@ class AppointmentService {
 					['id', 'asc']
 				],
 				include: [{
-					model: db.Role,
+					model: db.Roles,
 					attributes: [],
 					where: [
 						{
@@ -140,6 +146,7 @@ class AppointmentService {
 	static async getAll(req) {
 		const lang = req.headers.lang;
 		const getResult = await db.Appointments.findAll({
+			where: { isRemoved: false },
 			attributes: [
 				'id',
 				// eslint-disable-next-line max-len
@@ -156,12 +163,12 @@ class AppointmentService {
 			include: [
 				{
 					as: 'user',
-					model: db.User,
+					model: db.Users,
 					attributes: []
 				},
 				{
 					as: 'appDoctor',
-					model: db.User,
+					model: db.Users,
 					attributes: []
 				},
 				{
@@ -181,7 +188,7 @@ class AppointmentService {
 		try {
 			const lang = req.headers.lang;
 			const appointmentid = req.params.id;
-			if (appointmentid === undefined) {
+			if (!appointmentid) {
 				return {
 					type: false,
 					message: (language[lang].error.cannot_null).replace('{}', 'id')
@@ -189,7 +196,9 @@ class AppointmentService {
 			}
 			else {
 				const getResult = await db.Appointments.findOne({
+
 					where: {
+						isRemoved: false,
 						id: appointmentid
 					},
 					attributes: [
@@ -208,12 +217,12 @@ class AppointmentService {
 					include: [
 						{
 							as: 'user',
-							model: db.User,
+							model: db.Users,
 							attributes: []
 						},
 						{
 							as: 'appDoctor',
-							model: db.User,
+							model: db.Users,
 							attributes: []
 						},
 						{
@@ -222,7 +231,7 @@ class AppointmentService {
 						}
 					]
 				});
-				if (getResult === null) {
+				if (!getResult) {
 					return {
 						type: false,
 						// eslint-disable-next-line max-len
@@ -253,6 +262,7 @@ class AppointmentService {
 
 			const updateResult = await db.Appointments.findOne({
 				where: {
+					isRemoved: false,
 					id: req.body.id
 				}
 			});
@@ -271,14 +281,15 @@ class AppointmentService {
 			const doctor = req.body.doctor;
 			const hospitalId = req.body.hospitalId;
 
-			const doctorResult = await db.User.findAll({
+			const doctorResult = await db.Users.findAll({
 				where: [
 					{
+						isRemoved: false,
 						id: doctor
 					}
 				],
 				include: [{
-					model: db.Role,
+					model: db.Roles,
 					attributes: [],
 					where: [
 						{
@@ -294,9 +305,10 @@ class AppointmentService {
 					message: (language[lang].error.not_found).replace('{}', 'doktor')
 				};
 			}
-			const doctorHospital = await db.User.findAll({
+			const doctorHospital = await db.Users.findAll({
 				where: [
 					{
+						isRemoved: false,
 						id: doctor
 					}
 				],
@@ -304,7 +316,7 @@ class AppointmentService {
 					['id', 'asc']
 				],
 				include: [{
-					model: db.Role,
+					model: db.Roles,
 					attributes: [],
 					where: [
 						{
@@ -343,7 +355,7 @@ class AppointmentService {
 					message: (language[lang].appointment_not_created.already_exists)
 				};
 			}
-			if (updateResult === null) {
+			if (!updateResult) {
 				return {
 					type: false,
 					message: (language[lang].error.not_found).replace('{}', language[lang].tables.appointment)
@@ -379,19 +391,20 @@ class AppointmentService {
 			const id = req.params.id;
 			const deleteResult = await db.Appointments.findOne({
 				where: {
+					isRemoved: false,
 					id: id
 				}
 			});
-			if (deleteResult === null) {
+			if (!deleteResult) {
 				return {
 					type: false,
 					message: (language[lang].error.not_found).replace('{}', 'id')
 				};
 			}
-
-			db.Appointments.destroy({
-				where: { id }
+			await deleteResult.set({
+				isRemoved: true
 			});
+			await deleteResult.save();
 			return {
 				type: true,
 				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.appointment)

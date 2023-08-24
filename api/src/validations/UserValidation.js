@@ -9,6 +9,8 @@ class UserValidation {
       surName: Joi.string().min(3).max(30).required(),
       phone: Joi.string().min(10).max(10).required(),
       email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+      roleId: Joi.number(),
+      hospitalId: Joi.number()
     });
     const result = schema.validate(body);
 

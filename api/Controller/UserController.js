@@ -7,6 +7,8 @@ import UserValidation from '../src/validations/UserValidation';
  * @property {string} surName.required
  * @property {string} phone.required
  * @property {string} email.required 
+ * @property {number} roleId.required
+ * @property {number} hospitalId.required
  */
 /**
  * @typedef UserPut
@@ -16,12 +18,14 @@ import UserValidation from '../src/validations/UserValidation';
  * @property {string} surName.required
  * @property {string} phone.required
  * @property {string} email.required
+ * @property {number} roleId.required
+ * @property {number} hospitalId.required
  */
 class UserController {
 
 	/**
 	 * @swagger
-	 * @route POST /users
+	 * @route POST /user
 	 * @group Users - Post operation about users
 	 * @summary endpoint for adding a Users
 	 * @param {UserCreate.model} body.body.required
@@ -59,28 +63,37 @@ class UserController {
 		}
 	}
 	/**
-	 * @route GET /doctors
+	 * @route GET /doctor
 	 * @group Users
 	 * @summary get all doctors
 	 * @returns {object} 200 - An array of  users info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async getDoctor(req, res) {
-		const result = await UserService.getDoctor(req);
-		if (!result.type) {
+		try {
+			const result = await UserService.getDoctor(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 	/**
-	 * @route GET /users
+	 * @route GET /user
 	 * @group Users
 	 * @summary get all users
 	 * @returns {object} 200 - An array of  users info
@@ -88,21 +101,30 @@ class UserController {
 	 */
 
 	static async getAll(req, res) {
-		const result = await UserService.getAll(req);
-		if (!result.type) {
+		try {
+			const result = await UserService.getAll(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 	/**
-	 * @route GET /users/{id}
+	 * @route GET /user/{id}
 	 * @group Users
 	 * @summary get  user
 	 * @param {number} id.path.required - ID
@@ -110,23 +132,32 @@ class UserController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async get(req, res) {
-		const result = await UserService.get(req);
-		if (!result.type) {
+		try {
+			const result = await UserService.get(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 
 	/**
 	 * @swagger
-	 * @route PUT /users
+	 * @route PUT /user
 	 * @group Users - Put operation about users
 	 * @summary endpoint for adding a Users
 	 * @param {UserPut.model} Users.body.required
@@ -134,29 +165,38 @@ class UserController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async update(req, res) {
-		const validation = await UserValidation.createValidation(req.body);
-		if (!validation.type) {
+		try {
+			const validation = await UserValidation.createValidation(req.body);
+			if (!validation.type) {
+				return res.json({
+					type: false,
+					message: validation.message
+				});
+			}
+			const result = await UserService.update(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
+			return res.json({
+				type: true,
+				message: result.message,
+				data: result.data
+			});
+		}
+		catch (error) {
 			return res.json({
 				type: false,
-				message: validation.message
+				message: error.message
 			});
 		}
-		const result = await UserService.update(req);
-		if (!result.type) {
-			return res.json({
-				type: result.type,
-				message: result.message
-			});
-		}
-		return res.json({
-			type: true,
-			message: result.message,
-			data: result.data
-		});
+
 	}
 	/**
 	 * @swagger
-	 * @route DELETE /users/{id}
+	 * @route DELETE /user/{id}
 	 * @group Users - Delete operation about a users
 	 * @summary Delete a user from database
 	 * @param {number} id.path.required - ID  

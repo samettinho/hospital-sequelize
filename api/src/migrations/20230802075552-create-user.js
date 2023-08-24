@@ -31,14 +31,13 @@ module.exports = {
 				allowNull: false
 			},
 			createdAt: {
-				allowNull: true,
 				type: Sequelize.DATE
 			},
 			updatedAt: {
-				allowNull: true,
 				type: Sequelize.DATE
 			}
 		});
+
 	},
 	async down(queryInterface, Sequelize) {
 		await queryInterface.dropTable('Users');

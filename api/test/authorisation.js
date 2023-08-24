@@ -13,7 +13,7 @@ chai.should();
 describe(' Hospital Appointment Authorisation Service  testing', () => {
   it('get all authorisations', (done) => {
     chai.request(app)
-      .get('/authorisations')
+      .get('/authorisation')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -34,7 +34,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
 
   it('get one authorisation', (done) => {
     chai.request(app)
-      .get('/authorisations/2')
+      .get('/authorisation/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -56,7 +56,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
 
   it('get non authorisation', (done) => {
     chai.request(app)
-      .get('/authorisations/9')
+      .get('/authorisation/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -80,7 +80,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
       'authorisationStatement': 'yönetici ekle'
     };
     chai.request(app)
-      .post('/authorisations')
+      .post('/authorisation')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -104,7 +104,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
   it('get created authorisation', (done) => {
 
     chai.request(app)
-      .get(`/authorisations/${id}`)
+      .get(`/authorisation/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -128,7 +128,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
       'authorisationStatement': 'Hasta ekle'
     };
     chai.request(app)
-      .post('/authorisations')
+      .post('/authorisation')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -154,7 +154,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
       'authorisationStatement': 'hemşire ekle'
     };
     chai.request(app)
-      .put('/authorisations')
+      .put('/authorisation')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -177,7 +177,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
 
   it('get updated authorisation', (done) => {
     chai.request(app)
-      .get(`/authorisations/${id}`)
+      .get(`/authorisation/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -199,7 +199,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
 
   it('delete authorisation that doesnt exist', (done) => {
     chai.request(app)
-      .delete('/authorisations/9')
+      .delete('/authorisation/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -221,7 +221,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
 
   it('delete authorisation', (done) => {
     chai.request(app)
-      .delete(`/authorisations/${id}`)
+      .delete(`/authorisation/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -242,7 +242,7 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
 
   it('check deleted authorisation', (done) => {
     chai.request(app)
-      .delete(`/authorisations/${id}`)
+      .delete(`/authorisation/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {

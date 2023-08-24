@@ -11,9 +11,10 @@ chai.use(chaiHttp);
 chai.should();
 
 describe(' Hospital Appointment User Service testing', () => {
+  let id;
   it('get all users', (done) => {
     chai.request(app)
-      .get('/users')
+      .get('/user')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -34,7 +35,7 @@ describe(' Hospital Appointment User Service testing', () => {
 
   it('get one user', (done) => {
     chai.request(app)
-      .get('/users/2')
+      .get('/user/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -56,7 +57,7 @@ describe(' Hospital Appointment User Service testing', () => {
 
   it('get non user', (done) => {
     chai.request(app)
-      .get('/users/9')
+      .get('/user/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -74,17 +75,19 @@ describe(' Hospital Appointment User Service testing', () => {
         done();
       });
   });
-  let id;
+
   it('user create', (done) => {
     const body = {
-      'tc': '85749652585',
+      'tc': '85749652111',
       'name': 'tufan',
       'surName': 'tosun',
       'phone': '5486953256',
-      'email': 'tufan@gmail.com'
+      'email': 'tufan@gmail.com',
+      'roleId': 2,
+      'hospitalId': 1
     };
     chai.request(app)
-      .post('/users')
+      .post('/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -108,7 +111,7 @@ describe(' Hospital Appointment User Service testing', () => {
   it('get created user', (done) => {
 
     chai.request(app)
-      .get(`/users/${id}`)
+      .get(`/user/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -137,7 +140,7 @@ describe(' Hospital Appointment User Service testing', () => {
       'email': 'tufan@gmail.com'
     };
     chai.request(app)
-      .post('/users')
+      .post('/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -166,7 +169,7 @@ describe(' Hospital Appointment User Service testing', () => {
       'email': 'tufan@gmail.com'
     };
     chai.request(app)
-      .post('/users')
+      .post('/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -196,7 +199,7 @@ describe(' Hospital Appointment User Service testing', () => {
       'email': 'tosun@gmail.com'
     };
     chai.request(app)
-      .put('/users')
+      .put('/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -219,7 +222,7 @@ describe(' Hospital Appointment User Service testing', () => {
 
   it('get updated user', (done) => {
     chai.request(app)
-      .get(`/users/${id}`)
+      .get(`/user/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -254,7 +257,7 @@ describe(' Hospital Appointment User Service testing', () => {
       'email': 'tufan@gmail.com'
     };
     chai.request(app)
-      .put('/users')
+      .put('/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -276,7 +279,7 @@ describe(' Hospital Appointment User Service testing', () => {
 
   it('delete user that doesnt exist', (done) => {
     chai.request(app)
-      .delete('/users/9')
+      .delete('/user/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -298,7 +301,7 @@ describe(' Hospital Appointment User Service testing', () => {
 
   it('delete user', (done) => {
     chai.request(app)
-      .delete('/users/7')
+      .delete('/user/7')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -319,7 +322,7 @@ describe(' Hospital Appointment User Service testing', () => {
 
   it('check deleted user', (done) => {
     chai.request(app)
-      .delete('/users/7')
+      .delete('/user/7')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
