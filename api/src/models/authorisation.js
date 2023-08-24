@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			Authorisation.belongsToMany(models.Role, {
+			Authorisation.belongsToMany(models.Roles, {
 				through: 'AuthorisationRoles',
 				foreignKey: 'roleId'
 			});
 		}
-	
+
 	}
 	Authorisation.init({
 		authorisationStatement: DataTypes.STRING

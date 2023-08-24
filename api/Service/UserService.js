@@ -9,24 +9,37 @@ class UserService {
 
 		try {
 			const lang = req.headers.lang;
+			const {
+				tc,
+				name,
+				surName,
+				phone,
+				email,
+				roleId
+			} = req.body;
 
-			const [createdRecord, created] = await db.User.findOrCreate({
-				where: { tc: req.body.tc },
-				defaults: req.body
+			const createUser = await db.Users.create({
+				tc: tc,
+				name: name,
+				surName: surName,
+				phone: phone,
+				email: email,
+				UsersRoles: {
+					roleId: roleId
+				}
+			}, {
+				include: [
+					{
+						model: db.UsersRoles
+					}
+				]
 			});
-			if (created) {
-				return {
-					type: true,
-					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.user),
-					data: createdRecord
-				};
-			}
-			else {
-				return {
-					type: false,
-					message: (language[lang].error.already_exists)
-				};
-			}
+			return {
+				type: true,
+				message: (language[lang].crud.created).replace('{#table}', language[lang].tables.user),
+				data: createUser
+			};
+
 		}
 		catch (error) {
 			return {
@@ -38,7 +51,7 @@ class UserService {
 	static async getDoctor(req) {
 		try {
 			const lang = req.headers.lang;
-			const getResult = await db.User.findAll({
+			const getResult = await db.Users.findAll({
 
 				attributes: [
 					'id',
@@ -83,7 +96,7 @@ class UserService {
 	static async getAll(req) {
 		try {
 			const lang = req.headers.lang;
-			const getResult = await db.User.findAll({
+			const getResult = await db.Users.findAll({
 				attributes: [
 					'id',
 					'name',
@@ -127,7 +140,7 @@ class UserService {
 				};
 			}
 			else {
-				const getResult = await db.User.findOne({
+				const getResult = await db.Users.findOne({
 					where: {
 						id: userid
 					}
@@ -155,12 +168,12 @@ class UserService {
 	static async update(req) {
 		try {
 			const lang = req.headers.lang;
-			const updateResult = await db.User.findOne({
+			const updateResult = await db.Users.findOne({
 				where: {
 					id: req.body.id
 				}
 			});
-			const updateTc = await db.User.findOne({
+			const updateTc = await db.Users.findOne({
 				where: {
 					tc: req.body.tc
 				}
@@ -205,7 +218,7 @@ class UserService {
 
 			const lang = req.headers.lang;
 			const id = req.params.id;
-			const deleteResult = await db.User.findOne({
+			const deleteResult = await db.Users.findOne({
 				where: {
 					id: id
 				}
@@ -227,7 +240,7 @@ class UserService {
 					message: language[lang].error.userDelete
 				};
 			}
-			await db.User.destroy({
+			await db.Users.destroy({
 				where: { id }
 			});
 			return {

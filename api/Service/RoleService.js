@@ -7,7 +7,7 @@ class RoleService {
 	static async create(req) {
 		try {
 			const lang = req.headers.lang;
-			const [createdRecord, created] = await db.Role.findOrCreate({
+			const [createdRecord, created] = await db.Roles.findOrCreate({
 				where: { rolName: req.body.rolName },
 				defaults: req.body
 			});
@@ -34,7 +34,7 @@ class RoleService {
 	}
 	static async getAll(req) {
 		const lang = req.headers.lang;
-		const getResult = await db.Role.findAll({
+		const getResult = await db.Roles.findAll({
 			order: [
 				['id', 'asc']
 			]
@@ -57,7 +57,7 @@ class RoleService {
 				};
 			}
 			else {
-				const getResult = await db.Role.findOne({
+				const getResult = await db.Roles.findOne({
 					where: {
 						id: roleid
 					}
@@ -85,7 +85,7 @@ class RoleService {
 	static async update(req) {
 		try {
 			const lang = req.headers.lang;
-			const updateResult = await db.Role.findOne({
+			const updateResult = await db.Roles.findOne({
 				where: {
 					id: req.body.id
 				}
@@ -121,7 +121,7 @@ class RoleService {
 		try {
 			const lang = req.headers.lang;
 			const id = req.params.id;
-			const deleteResult = await db.Role.findOne({
+			const deleteResult = await db.Roles.findOne({
 				where: {
 					id: id
 				}
@@ -133,7 +133,7 @@ class RoleService {
 					message: (language[lang].error.not_found).replace('{}', 'id')
 				};
 			}
-			db.Role.destroy({
+			db.Roles.destroy({
 				where: { id }
 			});
 			return {

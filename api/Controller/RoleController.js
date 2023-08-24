@@ -13,7 +13,7 @@ class RoleController {
 
 	/**
 	 * @swagger
-	 * @route POST /roles
+	 * @route POST /role
 	 * @group Roles - Post operation about roles
 	 * @summary endpoint for adding a roles
 	 * @param {RoleCreate.model} body.body.required
@@ -50,28 +50,37 @@ class RoleController {
 		}
 	}
 	/**
-	 * @route GET /roles
+	 * @route GET /role
 	 * @group Roles
 	 * @summary get all roles
 	 * @returns {object} 200 - An array of  roles info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async getAll(req, res) {
-		const result = await RoleService.getAll(req);
-		if (!result.type) {
+		try {
+			const result = await RoleService.getAll(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 	/**
-	 * @route GET /roles/{id}
+	 * @route GET /role/{id}
 	 * @group Roles
 	 * @summary get  Roles
 	 * @param {number} id.path.required - ID
@@ -79,24 +88,33 @@ class RoleController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async get(req, res) {
-		const result = await RoleService.get(req);
-		if (!result.type) {
+		try {
+			const result = await RoleService.get(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 
 	/**
 	 * @swagger
 	 * @typedef RolePut
-	 * @route PUT /roles
+	 * @route PUT /role
 	 * @group Roles - Post operation about roles
 	 * @summary endpoint for updated a roles
 	 * @param {RolePut.model} Roles.body.required
@@ -104,29 +122,38 @@ class RoleController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async update(req, res) {
-		const validation = await RoleValidation.createValidation(req.body);
-		if (!validation.type) {
-			return res.json({
-				type: false,
-				message: validation.message
-			});
-		}
-		const result = await RoleService.update(req);
-		if (!result.type) {
+		try {
+			const validation = await RoleValidation.createValidation(req.body);
+			if (!validation.type) {
+				return res.json({
+					type: false,
+					message: validation.message
+				});
+			}
+			const result = await RoleService.update(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 	/**
 	 * @swagger
-	 * @route DELETE /roles/{id}
+	 * @route DELETE /role/{id}
 	 * @group Roles - Delete operation about a roles
 	 * @summary Delete a roles from database
 	 * @param {number} id.path.required - ID  
@@ -134,17 +161,26 @@ class RoleController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async delete(req, res) {
-		const result = await RoleService.delete(req);
-		if (!result.type) {
+		try {
+			const result = await RoleService.delete(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
 				message: result.message
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 
 }

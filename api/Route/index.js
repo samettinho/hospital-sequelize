@@ -12,7 +12,6 @@ fs.readdirSync(routes_directory)
   .forEach(routeFile => {
     try {
       const routeName = routeFile.slice(0, -9);
-      console.log(123);
       app.use(`/${routeName.toLowerCase()}`, require(routes_directory + '\\' + routeFile));
     }
     catch (error) {

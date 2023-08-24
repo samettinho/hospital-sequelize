@@ -44,7 +44,7 @@ class HospitalService {
 			include: [
 				{
 					as: 'doctors',
-					model: db.User,
+					model: db.Users,
 					attributes: [
 						'id',
 						'name',

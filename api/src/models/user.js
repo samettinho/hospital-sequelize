@@ -3,23 +3,25 @@ const {
 	Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-	class User extends Model {
+	class Users extends Model {
 
 		static associate(models) {
-			User.belongsToMany(models.Role, {
+			Users.belongsToMany(models.Roles, {
 				through: 'UsersRoles',
-				foreignKey: 'userId'
+				foreignKey: 'userId',
+				otherKey: 'roleId'
 			});
-			User.belongsToMany(models.Hospitals, {
+			Users.belongsToMany(models.Hospitals, {
 				through: 'doctorHospitals',
 				foreignKey: 'doctorId'
 			});
-			User.hasMany(models.Appointments, { foreignKey: 'userId' });
-			User.hasMany(models.Appointments, { foreignKey: 'doctor' });
+			Users.hasMany(models.Appointments, { as: 'Users', foreignKey: 'userId' });
+			Users.hasMany(models.Appointments, { as: 'appDoctor', foreignKey: 'doctor' });
+			Users.hasMany(models.UsersRoles, { foreignKey: 'userId' });
 		}
 
 	}
-	User.init({
+	Users.init({
 		tc: DataTypes.STRING,
 		name: DataTypes.STRING,
 		surName: DataTypes.STRING,
@@ -27,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
 		email: DataTypes.STRING
 	}, {
 		sequelize,
-		modelName: 'User'
+		modelName: 'Users'
 	});
-	return User;
+	return Users;
 };

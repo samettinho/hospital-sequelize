@@ -7,7 +7,7 @@ export default {
   },
   "error": {
     already_exists: 'kaydedilemedi. kayit zaten var',
-    cannot_null: '{} boş olamaz',
+    cannot_null: '{} boş olamaz', // buralar değişecek
     not_found: '{} bulunamadi',
     appointment_not_created: 'randevu oluşturulamadi. saat dolu.',
     doctor_hospital: 'doktor ve hastane eşleşmiyor',

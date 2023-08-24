@@ -3,7 +3,7 @@ const {
 	Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-	class Role extends Model {
+	class Roles extends Model {
 
 		/**
 		 * Helper method for defining associations.
@@ -11,22 +11,23 @@ module.exports = (sequelize, DataTypes) => {
 		 * The `models/index` file will call this method automatically.
 		 */
 		static associate(models) {
-			Role.belongsToMany(models.Authorisation, {
+			Roles.belongsToMany(models.Authorisation, {
 				through: 'AuthorisationRoles',
 				foreignKey: 'authorisationId'
 			});
-			Role.belongsToMany(models.User, {
+			Roles.belongsToMany(models.Users, {
 				through: 'UsersRoles',
-				foreignKey: 'roleId'
+				foreignKey: 'roleId',
+				otherKey: 'userId'
 			});
 		}
 
 	}
-	Role.init({
+	Roles.init({
 		rolName: DataTypes.STRING
 	}, {
 		sequelize,
-		modelName: 'Role'
+		modelName: 'Roles'
 	});
-	return Role;
+	return Roles;
 };

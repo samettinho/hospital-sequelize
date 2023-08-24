@@ -5,7 +5,7 @@ let options = {
       title: 'Hospital Appointment',
       version: '1.0.0'
     },
-    host: 'localhost:3000',
+    host: 'localhost:3000', //bu da env
     basePath: '',
     produces: ['application/json', 'application/xml'],
     schemas: ['http', 'https'],

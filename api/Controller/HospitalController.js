@@ -14,7 +14,7 @@ class HospitalController {
 
 	/**
 	 * @swagger
-	 * @route POST /hospitals
+	 * @route POST /hospital
 	 * @group Hospitals - Post operation about hospitals
 	 * @summary endpoint for adding a hospitals
 	 * @param {HospitalCreate.model} body.body.required
@@ -51,28 +51,37 @@ class HospitalController {
 		}
 	}
 	/**
-	 * @route GET /hospitals
+	 * @route GET /hospital
 	 * @group Hospitals
 	 * @summary get all hospitals
 	 * @returns {object} 200 - An array of  hospitals info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async getAll(req, res) {
-		const result = await HospitalService.getAll(req);
-		if (!result.type) {
+		try {
+			const result = await HospitalService.getAll(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 	/**
-	 * @route GET /hospitals/{id}
+	 * @route GET /hospital/{id}
 	 * @group Hospitals
 	 * @summary get  hospitals
 	 * @param {number} id.path.required - ID
@@ -80,23 +89,32 @@ class HospitalController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async get(req, res) {
-		const result = await HospitalService.get(req);
-		if (!result.type) {
+		try {
+			const result = await HospitalService.get(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 	/**
 	 * @swagger
 	 * @typedef HospitalPut
-	 * @route PUT /hospitals
+	 * @route PUT /hospital
 	 * @group Hospitals - Post operation about hospitals
 	 * @summary endpoint for updated a hospitals
 	 * @param {HospitalPut.model} body.body.required
@@ -104,29 +122,38 @@ class HospitalController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async update(req, res) {
-		const validation = await HospitalValidation.createValidation(req.body);
-		if (!validation.type) {
-			return res.json({
-				type: false,
-				message: validation.message
-			});
-		}
-		const result = await HospitalService.update(req);
-		if (!result.type) {
+		try {
+			const validation = await HospitalValidation.createValidation(req.body);
+			if (!validation.type) {
+				return res.json({
+					type: false,
+					message: validation.message
+				});
+			}
+			const result = await HospitalService.update(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
-				message: result.message
+				message: result.message,
+				data: result.data
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message,
-			data: result.data
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 	/**
 	 * @swagger
-	 * @route DELETE /hospitals/{id}
+	 * @route DELETE /hospital/{id}
 	 * @group Hospitals - Delete operation about a hospitals
 	 * @summary Delete a hospitals from database
 	 * @param {number} id.path.required - ID  
@@ -134,17 +161,26 @@ class HospitalController {
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async delete(req, res) {
-		const result = await HospitalService.delete(req);
-		if (!result.type) {
+		try {
+			const result = await HospitalService.delete(req);
+			if (!result.type) {
+				return res.json({
+					type: result.type,
+					message: result.message
+				});
+			}
 			return res.json({
 				type: result.type,
 				message: result.message
 			});
 		}
-		return res.json({
-			type: result.type,
-			message: result.message
-		});
+		catch (error) {
+			return res.json({
+				type: false,
+				message: error.message
+			});
+		}
+
 	}
 
 }
