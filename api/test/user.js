@@ -12,9 +12,23 @@ chai.should();
 
 describe(' Hospital Appointment User Service testing', () => {
   let id;
+  let agent = chai.request.agent(app);
+  beforeEach((done) => {
+    const body = {
+      tc: '25256358547',
+      password: '12345'
+    };
+    agent
+      .post('/public/auth/login')
+      .send(body)
+      .then((res) => {
+        res.should.have.status(200);
+        done();
+      });
+  });
   it('get all users', (done) => {
-    chai.request(app)
-      .get('/user')
+    agent
+      .get('/private/user')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -34,8 +48,8 @@ describe(' Hospital Appointment User Service testing', () => {
   });
 
   it('get one user', (done) => {
-    chai.request(app)
-      .get('/user/2')
+    agent
+      .get('/private/user/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -56,8 +70,8 @@ describe(' Hospital Appointment User Service testing', () => {
   });
 
   it('get non user', (done) => {
-    chai.request(app)
-      .get('/user/9')
+    agent
+      .get('/private/user/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -78,16 +92,16 @@ describe(' Hospital Appointment User Service testing', () => {
 
   it('user create', (done) => {
     const body = {
-      'tc': '85749652111',
-      'name': 'tufan',
-      'surName': 'tosun',
-      'phone': '5486953256',
-      'email': 'tufan@gmail.com',
-      'roleId': 2,
-      'hospitalId': 1
+      'tc': '77777777777',
+      'name': 'samet',
+      'surName': 'kerim',
+      'phone': '5489635258',
+      'email': 'samet@gmail.com',
+      'password': '12345',
+      'roleId': 1
     };
-    chai.request(app)
-      .post('/user')
+    agent
+      .post('/private/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -110,8 +124,8 @@ describe(' Hospital Appointment User Service testing', () => {
 
   it('get created user', (done) => {
 
-    chai.request(app)
-      .get(`/user/${id}`)
+    agent
+      .get(`/private/user/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -139,8 +153,8 @@ describe(' Hospital Appointment User Service testing', () => {
       'phone': '5486953256',
       'email': 'tufan@gmail.com'
     };
-    chai.request(app)
-      .post('/user')
+    agent
+      .post('/private/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -168,8 +182,8 @@ describe(' Hospital Appointment User Service testing', () => {
       'phone': '5486953256',
       'email': 'tufan@gmail.com'
     };
-    chai.request(app)
-      .post('/user')
+    agent
+      .post('/private/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -193,13 +207,14 @@ describe(' Hospital Appointment User Service testing', () => {
     const body = {
       'id': id,
       'tc': '85216325253',
-      'name': 'ali veli',
-      'surName': 'tosun',
-      'phone': '5486953256',
-      'email': 'tosun@gmail.com'
+      'name': 'samet',
+      'surName': 'kerim',
+      'phone': '5489635258',
+      'email': 'samet@gmail.com',
+      'password': '12345'
     };
-    chai.request(app)
-      .put('/user')
+    agent
+      .put('/private/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -221,8 +236,8 @@ describe(' Hospital Appointment User Service testing', () => {
   });
 
   it('get updated user', (done) => {
-    chai.request(app)
-      .get(`/user/${id}`)
+    agent
+      .get(`/private/user/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -238,10 +253,10 @@ describe(' Hospital Appointment User Service testing', () => {
         );
         res.body.should.have.property('type').equal(true);
         res.body.should.have.property('data').property('tc').equal('85216325253');
-        res.body.should.have.property('data').property('name').equal('ali veli');
-        res.body.should.have.property('data').property('surName').equal('tosun');
-        res.body.should.have.property('data').property('phone').equal('5486953256');
-        res.body.should.have.property('data').property('email').equal('tosun@gmail.com');
+        res.body.should.have.property('data').property('name').equal('samet');
+        res.body.should.have.property('data').property('surName').equal('kerim');
+        res.body.should.have.property('data').property('phone').equal('5489635258');
+        res.body.should.have.property('data').property('email').equal('samet@gmail.com');
 
         done();
       });
@@ -256,8 +271,8 @@ describe(' Hospital Appointment User Service testing', () => {
       'phone': '5486953256',
       'email': 'tufan@gmail.com'
     };
-    chai.request(app)
-      .put('/user')
+    agent
+      .put('/private/user')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -278,8 +293,8 @@ describe(' Hospital Appointment User Service testing', () => {
   });
 
   it('delete user that doesnt exist', (done) => {
-    chai.request(app)
-      .delete('/user/9')
+    agent
+      .delete('/private/user/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -300,8 +315,8 @@ describe(' Hospital Appointment User Service testing', () => {
   });
 
   it('delete user', (done) => {
-    chai.request(app)
-      .delete('/user/7')
+    agent
+      .delete('/private/user/7')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -321,8 +336,8 @@ describe(' Hospital Appointment User Service testing', () => {
   });
 
   it('check deleted user', (done) => {
-    chai.request(app)
-      .delete('/user/7')
+    agent
+      .delete('/private/user/7')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {

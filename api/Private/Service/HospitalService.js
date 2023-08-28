@@ -1,6 +1,6 @@
 /* eslint-disable array-bracket-spacing */
-import db from '../src/models';
-import language from '../src/language';
+import db from '../../src/models';
+import language from '../../src/language';
 
 class HospitalService {
 

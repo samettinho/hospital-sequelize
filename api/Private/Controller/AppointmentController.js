@@ -1,43 +1,49 @@
-import RoleService from '../Service/RoleService';
-import RoleValidation from '../src/validations/RoleValidation';
+import AppointmentService from '../Service/AppointmentService';
+import AppointmentValidation from '../../src/validations/AppointmentValidation';
 /**
- * @typedef RoleCreate
- * @property {string} rolName.required
+ * @typedef AppointmentCreate
+ * @property {number} userId.required
+ * @property {number} doctor.required
+ * @property {number} hospitalId.required
+ * @property {string} entryDate.required
  */
 /**
- * @typedef RolePut
+ * @typedef AppointmentsUpdate
  * @property {number} id.required
- * @property {string} rolName.required
+ * @property {number} userId.required
+ * @property {number} doctor.required
+ * @property {number} hospitalId.required
+ * @property {string} entryDate.required
  */
-class RoleController {
+class AppointmentController {
 
 	/**
 	 * @swagger
-	 * @route POST /role
-	 * @group Roles - Post operation about roles
+	 * @route POST /appointment
+	 * @group Appointments - Post operation about Appointments
 	 * @summary endpoint for adding a roles
-	 * @param {RoleCreate.model} body.body.required
-	 * @returns {object} 200 - An array of  roles info
+	 * @param {AppointmentCreate.model} body.body.required
+	 * @returns {object} 200 - An array of  Appointments info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async create(req, res) {
 		try {
-			const validation = await RoleValidation.createValidation(req.body);
+			const validation = await AppointmentValidation.createValidation(req.body);
 			if (!validation.type) {
 				return res.json({
 					type: false,
 					message: validation.message
 				});
 			}
-			const result = await RoleService.create(req);
+			const result = await AppointmentService.create(req);
 			if (!result.type) {
 				return res.json({
-					type: result.type,
+					type: false,
 					message: result.message
 				});
 			}
 			return res.json({
-				type: result.type,
+				type: true,
 				message: result.message,
 				data: result.data
 			});
@@ -50,15 +56,15 @@ class RoleController {
 		}
 	}
 	/**
-	 * @route GET /role
-	 * @group Roles
-	 * @summary get all roles
-	 * @returns {object} 200 - An array of  roles info
+	 * @route GET /appointment
+	 * @group Appointments
+	 * @summary get all appointments
+	 * @returns {object} 200 - An array of  appointments info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async getAll(req, res) {
 		try {
-			const result = await RoleService.getAll(req);
+			const result = await AppointmentService.getAll(req);
 			if (!result.type) {
 				return res.json({
 					type: result.type,
@@ -80,24 +86,24 @@ class RoleController {
 
 	}
 	/**
-	 * @route GET /role/{id}
-	 * @group Roles
-	 * @summary get  Roles
+	 * @route GET /appointment/{id}
+	 * @group Appointments
+	 * @summary get  Appointments
 	 * @param {number} id.path.required - ID
-	 * @returns {object} 200 - An array of  Roles info
+	 * @returns {object} 200 - An array of  Appointments info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async get(req, res) {
 		try {
-			const result = await RoleService.get(req);
+			const result = await AppointmentService.get(req);
 			if (!result.type) {
 				return res.json({
-					type: result.type,
+					type: false,
 					message: result.message
 				});
 			}
 			return res.json({
-				type: result.type,
+				type: true,
 				message: result.message,
 				data: result.data
 			});
@@ -113,32 +119,31 @@ class RoleController {
 
 	/**
 	 * @swagger
-	 * @typedef RolePut
-	 * @route PUT /role
-	 * @group Roles - Post operation about roles
-	 * @summary endpoint for updated a roles
-	 * @param {RolePut.model} Roles.body.required
-	 * @returns {object} 200 - An array of  roles info
+	 * @route PUT /appointment
+	 * @group Appointments - Post operation about Appointments
+	 * @summary endpoint for adding a roles
+	 * @param {AppointmentsUpdate.model} Appointments.body.required
+	 * @returns {object} 200 - An array of  Appointments info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async update(req, res) {
 		try {
-			const validation = await RoleValidation.createValidation(req.body);
+			const validation = await AppointmentValidation.createValidation(req.body);
 			if (!validation.type) {
 				return res.json({
 					type: false,
 					message: validation.message
 				});
 			}
-			const result = await RoleService.update(req);
+			const result = await AppointmentService.update(req);
 			if (!result.type) {
 				return res.json({
-					type: result.type,
+					type: false,
 					message: result.message
 				});
 			}
 			return res.json({
-				type: result.type,
+				type: true,
 				message: result.message,
 				data: result.data
 			});
@@ -153,25 +158,26 @@ class RoleController {
 	}
 	/**
 	 * @swagger
-	 * @route DELETE /role/{id}
-	 * @group Roles - Delete operation about a roles
-	 * @summary Delete a roles from database
+	 * @route DELETE /appointment/{id}
+	 * @group Appointments - Delete operation about a Appointments
+	 * @summary Delete a Appointments from database
 	 * @param {number} id.path.required - ID  
-	 * @returns {object} 200 - An array of  roles info
+	 * @returns {object} 200 - An array of  Appointments info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async delete(req, res) {
 		try {
-			const result = await RoleService.delete(req);
+			const result = await AppointmentService.delete(req);
 			if (!result.type) {
 				return res.json({
-					type: result.type,
+					type: false,
 					message: result.message
 				});
 			}
 			return res.json({
-				type: result.type,
-				message: result.message
+				type: true,
+				message: result.message,
+				data: result.data
 			});
 		}
 		catch (error) {
@@ -185,4 +191,4 @@ class RoleController {
 
 }
 
-export default RoleController;
+export default AppointmentController;

@@ -11,9 +11,24 @@ chai.use(chaiHttp);
 chai.should();
 
 describe(' Hospital Appointment Authorisation Service  testing', () => {
+  let agent = chai.request.agent(app);
+  beforeEach((done) => {
+    const body = {
+      tc: '25256358547',
+      password: '12345'
+    };
+
+    agent
+      .post('/public/auth/login')
+      .send(body)
+      .then((res) => {
+        res.should.have.status(200);
+        done();
+      });
+  });
   it('get all authorisations', (done) => {
-    chai.request(app)
-      .get('/authorisation')
+    agent
+      .get('/private/authorisation')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -33,8 +48,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
   });
 
   it('get one authorisation', (done) => {
-    chai.request(app)
-      .get('/authorisation/2')
+    agent
+      .get('/private/authorisation/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -55,8 +70,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
   });
 
   it('get non authorisation', (done) => {
-    chai.request(app)
-      .get('/authorisation/9')
+    agent
+      .get('/private/authorisation/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -79,8 +94,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
     const body = {
       'authorisationStatement': 'yönetici ekle'
     };
-    chai.request(app)
-      .post('/authorisation')
+    agent
+      .post('/private/authorisation')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -103,8 +118,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
 
   it('get created authorisation', (done) => {
 
-    chai.request(app)
-      .get(`/authorisation/${id}`)
+    agent
+      .get(`/private/authorisation/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -127,8 +142,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
     const body = {
       'authorisationStatement': 'Hasta ekle'
     };
-    chai.request(app)
-      .post('/authorisation')
+    agent
+      .post('/private/authorisation')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -153,8 +168,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
       'id': id,
       'authorisationStatement': 'hemşire ekle'
     };
-    chai.request(app)
-      .put('/authorisation')
+    agent
+      .put('/private/authorisation')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -176,8 +191,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
   });
 
   it('get updated authorisation', (done) => {
-    chai.request(app)
-      .get(`/authorisation/${id}`)
+    agent
+      .get(`/private/authorisation/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -198,8 +213,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
   });
 
   it('delete authorisation that doesnt exist', (done) => {
-    chai.request(app)
-      .delete('/authorisation/9')
+    agent
+      .delete('/private/authorisation/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -220,8 +235,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
   });
 
   it('delete authorisation', (done) => {
-    chai.request(app)
-      .delete(`/authorisation/${id}`)
+    agent
+      .delete(`/private/authorisation/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -241,8 +256,8 @@ describe(' Hospital Appointment Authorisation Service  testing', () => {
   });
 
   it('check deleted authorisation', (done) => {
-    chai.request(app)
-      .delete(`/authorisation/${id}`)
+    agent
+      .delete(`/private/authorisation/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
