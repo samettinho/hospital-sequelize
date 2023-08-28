@@ -40,7 +40,6 @@ class AuthController {
 
   static async login(req, res) {
     try {
-      const lang = req.headers.lang;
       const validation = await AuthValidation.loginValidation(req.body);
       if (!validation.type) {
         return res.json({
@@ -61,7 +60,7 @@ class AuthController {
       req.session.user = result.data.user;
       return res.json({
         type: true,
-        message: language[lang].success.login
+        message: result.message
       });
     }
     catch (error) {
