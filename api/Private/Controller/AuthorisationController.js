@@ -1,5 +1,5 @@
 import AuthorisationService from '../Service/AuthorisationService';
-import AuthorisationValidation from '../src/validations/AuthorisationValidation';
+import AuthorisationValidation from '../../src/validations/AuthorisationValidation';
 /**
  * @typedef AuthorisationCreate
  * @property {string} authorisationStatement.required

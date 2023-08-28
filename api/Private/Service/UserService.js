@@ -1,9 +1,10 @@
 /* eslint-disable array-bracket-spacing */
 
-import db from '../src/models';
-import language from '../src/language';
+import db from '../../src/models';
+import language from '../../src/language';
 import { Op } from 'sequelize';
-import RolesEnum from '../src/enum/RolesEnum';
+import RolesEnum from '../../src/enum/RolesEnum';
+import md5 from 'md5';
 
 class UserService {
 
@@ -17,9 +18,11 @@ class UserService {
 				surName,
 				phone,
 				email,
+				password,
 				roleId,
 				hospitalId
 			} = req.body;
+			const hashedPass = md5(password);
 			const createResult = await db.Users.findOne({
 				where: { tc: tc }
 			});
@@ -39,12 +42,14 @@ class UserService {
 						message: 'hastane bulunamadı'
 					};
 				}
+
 				const createUser = await db.Users.create({
 					tc: tc,
 					name: name,
 					surName: surName,
 					phone: phone,
 					email: email,
+					password: password,
 					UsersRoles: {
 						roleId: roleId
 					},
@@ -61,18 +66,21 @@ class UserService {
 						}
 					]
 				});
+
 				return {
 					type: true,
 					message: (language[lang].crud.created).replace('{#table}', language[lang].tables.user),
 					data: createUser
 				};
 			}
+
 			const createUser = await db.Users.create({
 				tc: tc,
 				name: name,
 				surName: surName,
 				phone: phone,
 				email: email,
+				password: hashedPass,
 				UsersRoles: {
 					roleId: roleId
 				}
@@ -148,6 +156,7 @@ class UserService {
 				where: { isRemoved: false },
 				attributes: [
 					'id',
+					'tc',
 					'name',
 					'surName',
 					'phone',
@@ -242,12 +251,14 @@ class UserService {
 				};
 			}
 			else {
+				const hashedPass = md5(req.body.password);
 				updateResult.set({
 					tc: req.body.tc,
 					name: req.body.name,
 					surName: req.body.surName,
 					phone: req.body.phone,
-					email: req.body.email
+					email: req.body.email,
+					password: hashedPass
 				});
 				await updateResult.save();
 				return {

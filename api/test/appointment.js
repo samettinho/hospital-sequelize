@@ -11,14 +11,30 @@ chai.use(chaiHttp);
 chai.should();
 
 describe(' Hospital Appointment  Service testing', () => {
+  let agent = chai.request.agent(app);
+  beforeEach((done) => {
+    const body = {
+      tc: '25256358547',
+      password: '12345'
+    };
+
+    agent
+      .post('/public/auth/login')
+      .send(body)
+      .then((res) => {
+        res.should.have.status(200);
+        done();
+      });
+  });
   it('get all appointment', (done) => {
-    chai.request(app)
-      .get('/appointment')
+    agent
+      .get('/private/appointment')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
           done(err);
         }
+
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.should.have.keys(
@@ -33,8 +49,8 @@ describe(' Hospital Appointment  Service testing', () => {
   });
 
   it('get one appointment', (done) => {
-    chai.request(app)
-      .get('/appointment/2')
+    agent
+      .get('/private/appointment/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -55,8 +71,8 @@ describe(' Hospital Appointment  Service testing', () => {
   });
 
   it('get non appointment', (done) => {
-    chai.request(app)
-      .get('/appointment/9')
+    agent
+      .get('/private/appointment/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -82,8 +98,8 @@ describe(' Hospital Appointment  Service testing', () => {
       hospitalId: 1,
       entryDate: '2023-08-20 17:45:00'
     };
-    chai.request(app)
-      .post('/appointment')
+    agent
+      .post('/private/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -105,8 +121,8 @@ describe(' Hospital Appointment  Service testing', () => {
   });
 
   it('get created appointment', (done) => {
-    chai.request(app)
-      .get(`/appointment/${id}`)
+    agent
+      .get(`/private/appointment/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -133,8 +149,8 @@ describe(' Hospital Appointment  Service testing', () => {
       'hospitalId': 2,
       'entryDate': '2023-08-20 17:45:00'
     };
-    chai.request(app)
-      .post('/appointment')
+    agent
+      .post('/private/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -161,8 +177,8 @@ describe(' Hospital Appointment  Service testing', () => {
       'hospitalId': 2,
       'entryDate': '2023-08-20 17:45:00'
     };
-    chai.request(app)
-      .post('/appointment')
+    agent
+      .post('/private/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -189,8 +205,8 @@ describe(' Hospital Appointment  Service testing', () => {
       'hospitalId': 1,
       'entryDate': '2023-08-20 17:45:00'
     };
-    chai.request(app)
-      .post('/appointment')
+    agent
+      .post('/private/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -218,8 +234,8 @@ describe(' Hospital Appointment  Service testing', () => {
       'hospitalId': 1,
       'entryDate': '2023-08-21 18:45:00'
     };
-    chai.request(app)
-      .put('/appointment')
+    agent
+      .put('/private/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -241,8 +257,8 @@ describe(' Hospital Appointment  Service testing', () => {
   });
 
   it('get updated appointment', (done) => {
-    chai.request(app)
-      .get(`/appointment/${id}`)
+    agent
+      .get(`/private/appointment/${id}`)
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -270,8 +286,8 @@ describe(' Hospital Appointment  Service testing', () => {
       'hospitalId': 1,
       'entryDate': '2023-08-20 17:25:00'
     };
-    chai.request(app)
-      .put('/appointment')
+    agent
+      .put('/private/appointment')
       .set('language', 'tr')
       .send(body)
       .end((err, res) => {
@@ -292,8 +308,8 @@ describe(' Hospital Appointment  Service testing', () => {
   });
 
   it('delete appointment that doesnt exist', (done) => {
-    chai.request(app)
-      .delete('/appointment/9')
+    agent
+      .delete('/private/appointment/9')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -314,8 +330,8 @@ describe(' Hospital Appointment  Service testing', () => {
   });
 
   it('delete appointment', (done) => {
-    chai.request(app)
-      .delete('/appointment/2')
+    agent
+      .delete('/private/appointment/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {
@@ -335,8 +351,8 @@ describe(' Hospital Appointment  Service testing', () => {
   });
 
   it('check deleted appointment', (done) => {
-    chai.request(app)
-      .delete('/appointment/2')
+    agent
+      .delete('/private/appointment/2')
       .set('language', 'tr')
       .end((err, res) => {
         if (err) {

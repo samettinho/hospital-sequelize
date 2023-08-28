@@ -13,7 +13,11 @@ export default {
     doctor_hospital: 'doktor ve hastane eşleşmiyor',
     appointment_notC: 'randevu olusturalamadı',
     userDelete: 'kullanıcnını randevusu var silinemez',
-    user_not_found: 'Böyle bir kullanici yok'
+    user_not_found: 'Böyle bir kullanici yok',
+    login: 'Giriş yapın',
+    tc_Taken: 'Bu tc no ile kullanıcı zaten var',
+    user_not_created: 'kullanıcı oluşturulamadı',
+    wrong_login: 'yanlış giriş denemesi'
   },
   "tables": {
     user: "kullanici",
@@ -21,6 +25,9 @@ export default {
     role: "rol",
     authorisation: "yetki",
     appointment: "randevu"
+  },
+  "success": {
+    login: 'giriş başarılı'
   }
 
 

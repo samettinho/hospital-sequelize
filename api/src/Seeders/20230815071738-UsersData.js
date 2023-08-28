@@ -9,6 +9,7 @@ module.exports = {
       surName: 'Yılmaz',
       phone: '5486952631',
       email: 'furkan@gmail.com',
+      password: "827ccb0eea8a706c4c34a16891f84e7b",
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -17,6 +18,7 @@ module.exports = {
       surName: 'Yılmaz',
       phone: '5346010739',
       email: 'Samet@hotmail.com',
+      password: "827ccb0eea8a706c4c34a16891f84e7b",
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -25,6 +27,7 @@ module.exports = {
       surName: 'Dincturk',
       phone: '5269856585',
       email: 'Hakan@gmail.com',
+      password: "827ccb0eea8a706c4c34a16891f84e7b",
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -33,6 +36,7 @@ module.exports = {
       surName: 'keskin',
       phone: '5263258547',
       email: 'ahmetkeskin@gmail.com',
+      password: "827ccb0eea8a706c4c34a16891f84e7b",
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -41,6 +45,7 @@ module.exports = {
       surName: 'demircioğlu',
       phone: '5486953225',
       email: 'demircioğlu@gmail.com',
+      password: "827ccb0eea8a706c4c34a16891f84e7b",
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
@@ -49,6 +54,7 @@ module.exports = {
       surName: 'arzum',
       phone: '5485263252',
       email: 'süleyman@gmail.com',
+      password: "827ccb0eea8a706c4c34a16891f84e7b",
       createdAt: new Date(),
       updatedAt: new Date()
     }

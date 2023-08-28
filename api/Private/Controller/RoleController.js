@@ -1,44 +1,43 @@
-import HospitalService from '../Service/HospitalService';
-import HospitalValidation from '../src/validations/HospitalValidation';
-
+import RoleService from '../Service/RoleService';
+import RoleValidation from '../../src/validations/RoleValidation';
 /**
- * @typedef HospitalCreate
- * @property {string} hospitalName.required
+ * @typedef RoleCreate
+ * @property {string} rolName.required
  */
 /**
- * @typedef HospitalPut
- * @property {number} id.required 
- * @property {string} hospitalName.required
+ * @typedef RolePut
+ * @property {number} id.required
+ * @property {string} rolName.required
  */
-class HospitalController {
+class RoleController {
 
 	/**
 	 * @swagger
-	 * @route POST /hospital
-	 * @group Hospitals - Post operation about hospitals
-	 * @summary endpoint for adding a hospitals
-	 * @param {HospitalCreate.model} body.body.required
-	 * @returns {object} 200 - An array of  hospitals info
+	 * @route POST /role
+	 * @group Roles - Post operation about roles
+	 * @summary endpoint for adding a roles
+	 * @param {RoleCreate.model} body.body.required
+	 * @returns {object} 200 - An array of  roles info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async create(req, res) {
 		try {
-			const validation = await HospitalValidation.createValidation(req.body);
+			const validation = await RoleValidation.createValidation(req.body);
 			if (!validation.type) {
 				return res.json({
 					type: false,
 					message: validation.message
 				});
 			}
-			const result = await HospitalService.create(req);
+			const result = await RoleService.create(req);
 			if (!result.type) {
 				return res.json({
-					type: false,
+					type: result.type,
 					message: result.message
 				});
 			}
 			return res.json({
-				type: true,
+				type: result.type,
 				message: result.message,
 				data: result.data
 			});
@@ -51,15 +50,15 @@ class HospitalController {
 		}
 	}
 	/**
-	 * @route GET /hospital
-	 * @group Hospitals
-	 * @summary get all hospitals
-	 * @returns {object} 200 - An array of  hospitals info
+	 * @route GET /role
+	 * @group Roles
+	 * @summary get all roles
+	 * @returns {object} 200 - An array of  roles info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async getAll(req, res) {
 		try {
-			const result = await HospitalService.getAll(req);
+			const result = await RoleService.getAll(req);
 			if (!result.type) {
 				return res.json({
 					type: result.type,
@@ -81,16 +80,16 @@ class HospitalController {
 
 	}
 	/**
-	 * @route GET /hospital/{id}
-	 * @group Hospitals
-	 * @summary get  hospitals
+	 * @route GET /role/{id}
+	 * @group Roles
+	 * @summary get  Roles
 	 * @param {number} id.path.required - ID
-	 * @returns {object} 200 - An array of  hospitals info
+	 * @returns {object} 200 - An array of  Roles info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async get(req, res) {
 		try {
-			const result = await HospitalService.get(req);
+			const result = await RoleService.get(req);
 			if (!result.type) {
 				return res.json({
 					type: result.type,
@@ -111,26 +110,27 @@ class HospitalController {
 		}
 
 	}
+
 	/**
 	 * @swagger
-	 * @typedef HospitalPut
-	 * @route PUT /hospital
-	 * @group Hospitals - Post operation about hospitals
-	 * @summary endpoint for updated a hospitals
-	 * @param {HospitalPut.model} body.body.required
-	 * @returns {object} 200 - An array of  hospitals info
+	 * @typedef RolePut
+	 * @route PUT /role
+	 * @group Roles - Post operation about roles
+	 * @summary endpoint for updated a roles
+	 * @param {RolePut.model} Roles.body.required
+	 * @returns {object} 200 - An array of  roles info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async update(req, res) {
 		try {
-			const validation = await HospitalValidation.createValidation(req.body);
+			const validation = await RoleValidation.createValidation(req.body);
 			if (!validation.type) {
 				return res.json({
 					type: false,
 					message: validation.message
 				});
 			}
-			const result = await HospitalService.update(req);
+			const result = await RoleService.update(req);
 			if (!result.type) {
 				return res.json({
 					type: result.type,
@@ -153,16 +153,16 @@ class HospitalController {
 	}
 	/**
 	 * @swagger
-	 * @route DELETE /hospital/{id}
-	 * @group Hospitals - Delete operation about a hospitals
-	 * @summary Delete a hospitals from database
+	 * @route DELETE /role/{id}
+	 * @group Roles - Delete operation about a roles
+	 * @summary Delete a roles from database
 	 * @param {number} id.path.required - ID  
-	 * @returns {object} 200 - An array of  hospitals info
+	 * @returns {object} 200 - An array of  roles info
 	 * @returns {Errors} 500 - Internal server error
 	 */
 	static async delete(req, res) {
 		try {
-			const result = await HospitalService.delete(req);
+			const result = await RoleService.delete(req);
 			if (!result.type) {
 				return res.json({
 					type: result.type,
@@ -185,4 +185,4 @@ class HospitalController {
 
 }
 
-export default HospitalController;
+export default RoleController;

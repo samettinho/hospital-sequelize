@@ -20,7 +20,14 @@ export default {
     doctor_hospital: 'doctor and hospital do not match',
     appointment_notC: 'appointment not created',
     userDelete: 'The user has an appointment. cannot be deleted',
-    user_not_found: 'Cannot create an appointment with a non-user'
+    user_not_found: 'Cannot create an appointment with a non-user',
+    login: 'Please login',
+    tc_Taken: 'Tc is already taken',
+    user_not_created: 'user not created',
+    wrong_login: 'wrong login try again'
+  },
+  "success": {
+    login: 'login success'
   }
 
 

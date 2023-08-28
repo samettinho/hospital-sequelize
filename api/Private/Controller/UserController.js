@@ -1,5 +1,5 @@
 import UserService from '../Service/UserService';
-import UserValidation from '../src/validations/UserValidation';
+import UserValidation from '../../src/validations/UserValidation';
 /**
  * @typedef UserCreate
  * @property {string} tc.required
