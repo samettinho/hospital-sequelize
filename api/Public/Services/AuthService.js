@@ -83,6 +83,7 @@ class AuthService {
       const parsedUserData = JSON.parse(JSON.stringify(user));
       return {
         type: true,
+        message: ` ${parsedUserData.name} ${parsedUserData.surName} ` + language[lang].success.login,
         data: {
           user: {
             id: parsedUserData.id,
