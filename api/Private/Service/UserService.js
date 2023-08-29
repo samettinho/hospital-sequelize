@@ -202,7 +202,25 @@ class UserService {
 					where: {
 						isRemoved: false,
 						id: userid
-					}
+					},
+					attributes: [
+						'id',
+						'tc',
+						'name',
+						'surName',
+						'phone',
+						'email',
+						[db.Sequelize.col('Roles.rolName'), 'role_name']
+					],
+					order: [
+						['id', 'asc']
+					],
+					include: [
+						{
+							model: db.Roles,
+							attributes: []
+						}
+					]
 				});
 				if (getResult === null) {
 					return {

@@ -1,3 +1,4 @@
+/* eslint-disable array-bracket-spacing */
 import db from '../../src/models';
 import md5 from 'md5';
 import language from '../../src/language';
@@ -73,14 +74,30 @@ class AuthService {
           password: md5(req.body.password)
         }
       });
-
+      const parsedUserData = JSON.parse(JSON.stringify(user));
+      const userRole = await db.Users.findOne({
+        attributes: [
+          [db.Sequelize.col('Roles.rolName'), 'role_name']
+        ],
+        where: {
+          id: parsedUserData.id,
+          tc: req.body.tc,
+          password: md5(req.body.password)
+        },
+        include: [
+          {
+            model: db.Roles
+          }
+        ]
+      });
+      const parsedUserRole = JSON.parse(JSON.stringify(userRole));
       if (!user) {
         return {
           type: false,
           message: language[lang].error.wrong_login
         };
       }
-      const parsedUserData = JSON.parse(JSON.stringify(user));
+
       return {
         type: true,
         message: ` ${parsedUserData.name} ${parsedUserData.surName} ` + language[lang].success.login,
@@ -89,7 +106,8 @@ class AuthService {
             id: parsedUserData.id,
             full_name: `${parsedUserData.name} ${parsedUserData.surName}`,
             tc: parsedUserData.tc,
-            email: parsedUserData.email
+            email: parsedUserData.email,
+            userRole: parsedUserRole.role_name
           }
         }
       };

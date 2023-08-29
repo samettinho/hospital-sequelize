@@ -1,19 +1,9 @@
 import express from 'express';
 import fs from 'fs';
-import language from '../src/language';
-
+import authenticate from '../Helpers/AuthenticateHelpers';
 const app = express();
 
-app.use((req, res, next) => {
-  if (req.session.isLogged !== true) {
-    const lang = req.headers.lang;
-    return res.json({
-      type: false,
-      message: (language[lang].error.login)
-    });
-  }
-  next();
-});
+app.use(authenticate);
 
 fs.readdir('./api/Private/Route', (err, files) => {
   if (err) throw err;

@@ -60,7 +60,8 @@ class AuthController {
       req.session.user = result.data.user;
       return res.json({
         type: true,
-        message: result.message
+        message: result.message,
+        data: result.data
       });
     }
     catch (error) {

@@ -187,19 +187,18 @@ class AppointmentService {
 	static async get(req) {
 		try {
 			const lang = req.headers.lang;
-			const appointmentid = req.params.id;
+			const appointmentid = req.params.id = req.params.id ? req.params.id : req.session.user['id'];
 			if (!appointmentid) {
 				return {
 					type: false,
-					message: (language[lang].error.cannot_null).replace('{}', 'id')
+					message: (language[lang].error.cannot_null).replace('{}', language[lang].tables.appointment)
 				};
 			}
 			else {
-				const getResult = await db.Appointments.findOne({
-
+				const getResult = await db.Appointments.findAll({
 					where: {
 						isRemoved: false,
-						id: appointmentid
+						userId: req.session.user['id']
 					},
 					attributes: [
 						'id',
@@ -409,7 +408,6 @@ class AppointmentService {
 				type: true,
 				message: (language[lang].crud.deleted).replace('{#table}', language[lang].tables.appointment)
 			};
-
 		}
 		catch (error) {
 			return {
