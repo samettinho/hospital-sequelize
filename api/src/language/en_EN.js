@@ -24,7 +24,8 @@ export default {
     login: 'Please login',
     tc_Taken: 'Tc is already taken',
     user_not_created: 'user not created',
-    wrong_login: 'wrong login try again'
+    wrong_login: 'wrong login try again',
+    invalid_authorisation: 'You do not have sufficient authorization to perform this operation'
   },
   "success": {
     login: 'login success'

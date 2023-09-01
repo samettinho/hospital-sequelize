@@ -3,7 +3,7 @@ import db from '../src/models';
 
 const permChecker = (requiredPermission) => {
   return async (req, res, next) => {
-
+    const lang = req.headers.lang;
     const RoleId = await db.Roles.findOne({
       where: {
         rolName: req.session.user['userRole'],
@@ -20,7 +20,7 @@ const permChecker = (requiredPermission) => {
     if (role.length === 0) {
       return res.status(403).json({
         type: false,
-        message: 'Bu işlemi gerçekleştirmek için yeterli yetkiniz yok'
+        message: language[lang].error.invalid_authorisation
       });
     }
     next();

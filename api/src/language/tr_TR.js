@@ -17,7 +17,8 @@ export default {
     login: 'Giriş yapın',
     tc_Taken: 'Bu tc no ile kullanıcı zaten var',
     user_not_created: 'kullanıcı oluşturulamadı',
-    wrong_login: 'yanlış giriş denemesi'
+    wrong_login: 'yanlış giriş denemesi',
+    invalid_authorisation: 'Bu işlemi gerçekleştirmek için yeterli yetkiniz yok'
   },
   "tables": {
     user: "kullanici",
